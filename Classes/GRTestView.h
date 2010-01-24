@@ -1,8 +1,8 @@
 //
-//  GRChartsAppDelegate.m
+//  GRTestView.h
 //  GRCharts
 //
-//  Created by Joshua Buhler on 1/23/10.
+//  Created by Joshua Buhler on 1/24/10.
 //  Copyright (c) 2010 Josh Buhler - ghostRadio.net
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,28 +24,11 @@
 // THE SOFTWARE.
 //
 
-#import "GRChartsAppDelegate.h"
-#import "GRTestView.h"
+#import <UIKit/UIKit.h>
+#import "GRLineChart.h"
 
-@implementation GRChartsAppDelegate
-
-@synthesize window;
-
-
-- (void)applicationDidFinishLaunching:(UIApplication *)application {    
-
-    // Override point for customization after application launch
-    [window makeKeyAndVisible];
-	
-	GRTestView *testView = [[GRTestView alloc] init];
-	[window addSubview:testView.view];
+@interface GRTestView : UIViewController {
+	GRLineChart	*lineChart;
 }
-
-
-- (void)dealloc {
-    [window release];
-    [super dealloc];
-}
-
 
 @end
