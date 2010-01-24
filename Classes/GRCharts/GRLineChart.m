@@ -77,9 +77,36 @@
 	int totalPoints = [self.dataProvider count];
 	
 	// how big is the chart frame, and then space the points evenly across that area
-	int xPad = self.frame.size.width / (totalPoints - 1);
-	int yPad = (chartRange.max - chartRange.min) / (totalPoints - 1);
+	float xPad = self.frame.size.width / totalPoints;
+	float yPad = self.frame.size.height / (chartRange.max - chartRange.min);
+	NSLog(@"xPad: %f yPad: %f", xPad, yPad);
 	
+	float baseline = self.frame.size.height;
+	CGPoint currentPoint = CGPointMake(0, baseline);
+	
+	currentPoint.y = baseline - ([[_dataProvider objectAtIndex:0] floatValue] - chartRange.min) * yPad;
+		
+	CGContextRef c = UIGraphicsGetCurrentContext();
+	CGContextBeginPath(c);
+	
+	CGContextMoveToPoint(c, currentPoint.x, currentPoint.y);
+	
+	CGPoint endPoint = CGPointZero;
+	for (int i = 1; i < totalPoints; i++)
+	{	
+		endPoint.x += xPad;
+		endPoint.y = baseline - ([[_dataProvider objectAtIndex:i] floatValue] - chartRange.min) * yPad;
+		
+		
+		CGContextAddLineToPoint(c, endPoint.x, endPoint.y);
+		//CGContextClosePath(c);
+		
+		CGContextSetStrokeColorWithColor(c, [UIColor orangeColor].CGColor);
+		
+	}
+	CGContextStrokePath(c);
+	
+	UIGraphicsEndImageContext();
 	
 	redrawChart = NO;
 }
@@ -100,10 +127,7 @@
 		
 		if (testValue < min)
 			min = testValue;
-		
-			
 	}
-
 	
 	GRRange range;
 	range.min = min;
