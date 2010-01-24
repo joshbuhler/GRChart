@@ -25,12 +25,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GRLineChart.h"
 
 @interface GRChartsAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
-	
-	GRLineChart	*lineChart;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

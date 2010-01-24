@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		060C283C110CB05700D6C13F /* GRTestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 060C283B110CB05700D6C13F /* GRTestView.m */; };
 		064ADC1F110C2FD200DB05E9 /* LogicTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 064ADC1E110C2FD200DB05E9 /* LogicTests.m */; };
 		064ADC30110C31FD00DB05E9 /* GRLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 065371E8110C254F00B3F85F /* GRLineChart.m */; };
 		065371E9110C254F00B3F85F /* GRLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 065371E8110C254F00B3F85F /* GRLineChart.m */; };
@@ -19,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		060C283A110CB05700D6C13F /* GRTestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRTestView.h; sourceTree = "<group>"; };
+		060C283B110CB05700D6C13F /* GRTestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRTestView.m; sourceTree = "<group>"; };
 		064ADC14110C2F8B00DB05E9 /* LogicTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LogicTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		064ADC15110C2F8B00DB05E9 /* LogicTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LogicTests-Info.plist"; sourceTree = "<group>"; };
 		064ADC1D110C2FD200DB05E9 /* LogicTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogicTests.h; sourceTree = "<group>"; };
@@ -84,6 +87,8 @@
 			children = (
 				1D3623240D0F684500981E51 /* GRChartsAppDelegate.h */,
 				1D3623250D0F684500981E51 /* GRChartsAppDelegate.m */,
+				060C283A110CB05700D6C13F /* GRTestView.h */,
+				060C283B110CB05700D6C13F /* GRTestView.m */,
 				065371E5110C254F00B3F85F /* GRCharts */,
 			);
 			path = Classes;
@@ -248,6 +253,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* GRChartsAppDelegate.m in Sources */,
 				065371E9110C254F00B3F85F /* GRLineChart.m in Sources */,
+				060C283C110CB05700D6C13F /* GRTestView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
