@@ -95,7 +95,7 @@
 	int totalPoints = [self.dataProvider count];
 	
 	// how big is the chart frame, and then space the points evenly across that area
-	float xPad = self.frame.size.width / totalPoints;
+	float xPad = self.frame.size.width / (totalPoints - 1);
 	float yPad = self.frame.size.height / (chartRange.max - chartRange.min);
 	NSLog(@"xPad: %f yPad: %f", xPad, yPad);
 	
