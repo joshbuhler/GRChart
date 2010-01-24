@@ -12,7 +12,6 @@
 
 - (void) initVars;
 - (void) commitProperties;
-- (GRRange) getChartRange;
 
 @end
 
@@ -73,6 +72,7 @@
 		return;
 	
 	GRRange chartRange = [self getChartRange];
+	NSLog(@"Chart range: %f-%f", chartRange.min, chartRange.max);
 	
 	int totalPoints = [self.dataProvider count];
 	
@@ -86,22 +86,24 @@
 
 - (GRRange) getChartRange
 {
-	float min = 0;
-	float max = 0;
-	float testValue = 0;
+	float testValue = [[self.dataProvider objectAtIndex:0] floatValue];
+	
+	float min = testValue;
+	float max = testValue;	
 	
 	int total = [self.dataProvider count];
 	for (int i = 0; i < total; i++)
 	{
 		testValue = [[self.dataProvider objectAtIndex:i] floatValue];
-		if (testValue > max || max == 0)
+		if (testValue > max)
 			max = testValue;
 		
-		if (testValue < min || min == 0)
+		if (testValue < min)
 			min = testValue;
-			
+		
 			
 	}
+
 	
 	GRRange range;
 	range.min = min;

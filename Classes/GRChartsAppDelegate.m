@@ -20,6 +20,16 @@
 	
 	lineChart = [[GRLineChart alloc] initWithFrame:CGRectMake(0, 0, 320, 320)];
 	[window addSubview:lineChart];
+	
+	NSMutableArray *test1 = [[NSMutableArray alloc] init];
+	for (int i = 0; i < 10; i++)
+	{
+		[test1 addObject:[NSNumber numberWithFloat:(float)i]];
+		NSLog(@"i %f", (float)i);
+	}
+	
+	lineChart.dataProvider = test1;
+	[test1 release];
 }
 
 

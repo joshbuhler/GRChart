@@ -26,5 +26,6 @@ typedef struct GRRange GRRange;
 
 @property (nonatomic, retain) NSArray *dataProvider;
 
+- (GRRange) getChartRange;
 
 @end
