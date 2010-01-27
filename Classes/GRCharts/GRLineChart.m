@@ -30,6 +30,8 @@
 
 - (void) initVars;
 - (void) commitProperties;
+- (void) renderGrid:(GRRange)chartRange;
+- (void) renderData:(GRRange)chartRange;
 
 @end
 
@@ -91,7 +93,29 @@
 	
 	GRRange chartRange = [self getChartRange];
 	NSLog(@"Chart range: %f-%f", chartRange.min, chartRange.max);
+	//[self renderGrid:chartRange];
+	[self renderData:chartRange];
 	
+	redrawChart = NO;
+}
+
+- (void) renderGrid:(GRRange)chartRange
+{
+	CGFloat lineDash[2];
+	lineDash[0] = 5.0f;
+	lineDash[1] = 5.0f;
+	
+	CGContextRef cgContext = UIGraphicsGetCurrentContext();
+	CGContextBeginPath(cgContext);
+	
+	CGContextSetLineDash(cgContext, 0.0f, lineDash, 2);
+	CGContextSetLineWidth(cgContext, 0.1f);
+	
+	int totalPoints = [self.dataProvider count];
+}
+
+- (void) renderData:(GRRange)chartRange
+{
 	int totalPoints = [self.dataProvider count];
 	
 	// how big is the chart frame, and then space the points evenly across that area
@@ -103,11 +127,11 @@
 	CGPoint currentPoint = CGPointMake(0, baseline);
 	
 	currentPoint.y = baseline - ([[_dataProvider objectAtIndex:0] floatValue] - chartRange.min) * yPad;
-		
-	CGContextRef c = UIGraphicsGetCurrentContext();
-	CGContextBeginPath(c);
 	
-	CGContextMoveToPoint(c, currentPoint.x, currentPoint.y);
+	CGContextRef cgContext = UIGraphicsGetCurrentContext();
+	CGContextBeginPath(cgContext);
+	
+	CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);
 	
 	CGPoint endPoint = CGPointZero;
 	for (int i = 1; i < totalPoints; i++)
@@ -115,18 +139,13 @@
 		endPoint.x += xPad;
 		endPoint.y = baseline - ([[_dataProvider objectAtIndex:i] floatValue] - chartRange.min) * yPad;
 		
-		
-		CGContextAddLineToPoint(c, endPoint.x, endPoint.y);
-		//CGContextClosePath(c);
-		
-		CGContextSetStrokeColorWithColor(c, [UIColor orangeColor].CGColor);
+		CGContextAddLineToPoint(cgContext, endPoint.x, endPoint.y);		
+		CGContextSetStrokeColorWithColor(cgContext, [UIColor orangeColor].CGColor);
 		
 	}
-	CGContextStrokePath(c);
+	CGContextStrokePath(cgContext);
 	
 	UIGraphicsEndImageContext();
-	
-	redrawChart = NO;
 }
 
 - (GRRange) getChartRange
