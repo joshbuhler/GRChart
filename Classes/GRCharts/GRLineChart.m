@@ -118,32 +118,32 @@
 	CGContextSetLineWidth(cgContext, 0.3f);
 	UIColor *gridColor = [UIColor whiteColor];
 	
-	int xLines = floorf(self.frame.size.width / gridX);
-	int yLines = floorf(self.frame.size.height / gridY);
+	int xLines = ceil(self.frame.size.width / gridX);
+	int yLines = ceil(self.frame.size.height / gridY);
 	
-	// Horizontal grid lines
+	// Vertical grid lines
 	int xPos = 0;
-	int yPos = 0;
+	int yPos = self.frame.size.height;
 	for (int x = 0; x < xLines; x++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
-		CGContextAddLineToPoint(cgContext, xPos, yPos + self.frame.size.height);
+		CGContextAddLineToPoint(cgContext, xPos, yPos - self.frame.size.height);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
 		xPos += gridX;
 	}
 	CGContextSetLineDash(cgContext, 0, nil, 0);
 
-	// vertical lines
+	// Horizontal lines
 	xPos = 0;
-	yPos = 0;
+	yPos = self.frame.size.height;
 	for (int y = 0; y < yLines; y++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
 		CGContextAddLineToPoint(cgContext, xPos + self.frame.size.width, yPos);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
-		yPos += gridY;
+		yPos -= gridY;
 	}
 	
 	CGContextStrokePath(cgContext);
