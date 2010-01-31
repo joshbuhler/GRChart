@@ -152,7 +152,6 @@
 
 - (void) renderData:(GRRange)chartRange
 {	
-	//*********
 	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
 	
@@ -190,8 +189,9 @@
 			}
 		}
 		CGContextSetStrokeColorWithColor(cgContext, cSeries.lineColor.CGColor);
+		CGContextStrokePath(cgContext);
 	}
-	CGContextStrokePath(cgContext);
+	
 	
 	UIGraphicsEndImageContext();
 }
