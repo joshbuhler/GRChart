@@ -25,10 +25,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GRDataProvider.h"
+#import "GRLineSeries.h"
 
 @interface GRLineChart : UIView {
-	//id<GRDataProvider>	_dataProvider;
 	NSArray		*_dataProvider;
 	BOOL		_dataProviderDirty;
 	

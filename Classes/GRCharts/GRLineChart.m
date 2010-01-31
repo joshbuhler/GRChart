@@ -152,12 +152,14 @@
 
 - (void) renderData:(GRRange)chartRange
 {
-	int totalPoints = [self.dataProvider count];
+	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
+	int totalPoints = [firstSeries.data count];
 	
 	// how big is the chart frame, and then space the points evenly across that area
 	float xPad = self.frame.size.width / (totalPoints - 1);
 	float yPad = self.frame.size.height / (chartRange.max - chartRange.min);
 	
+	// baseline is the bottom line of the chart
 	float baseline = self.frame.size.height;
 	CGPoint currentPoint = CGPointMake(0, baseline);
 	
@@ -186,20 +188,27 @@
 
 - (GRRange) getChartRange
 {
-	float testValue = [[self.dataProvider objectAtIndex:0] floatValue];
+	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
+	
+	float testValue = [[firstSeries.data objectAtIndex:0] floatValue];
 	
 	float min = testValue;
 	float max = testValue;	
 	
-	int total = [self.dataProvider count];
-	for (int i = 0; i < total; i++)
+	int totalLines = [self.dataProvider count];
+	for (int i = 0; i < totalLines; i++)
 	{
-		testValue = [[self.dataProvider objectAtIndex:i] floatValue];
-		if (testValue > max)
-			max = testValue;
-		
-		if (testValue < min)
-			min = testValue;
+		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
+		int total = [cSeries.data count];
+		for (int k = 0; k < total; k++)
+		{
+			testValue = [[cSeries.data objectAtIndex:k] floatValue];
+			if (testValue > max)
+				max = testValue;
+			
+			if (testValue < min)
+				min = testValue;
+		}
 	}
 	
 	GRRange range;
