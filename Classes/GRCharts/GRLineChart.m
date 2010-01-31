@@ -39,7 +39,7 @@
 @implementation GRLineChart
 
 @synthesize dataProvider = _dataProvider;
-@synthesize gridX, gridY;
+@synthesize minGridX, minGridY;
 
 #pragma mark -
 #pragma mark Initialization
@@ -56,8 +56,8 @@
 {
 	_dataProviderDirty = NO;
 	
-	gridX = 30;
-	gridY = 30;
+	minGridX = 25;
+	minGridY = 25;
 }
 
 #pragma mark -
@@ -118,8 +118,21 @@
 	CGContextSetLineWidth(cgContext, 0.3f);
 	UIColor *gridColor = [UIColor whiteColor];
 	
-	int xLines = ceil(self.frame.size.width / gridX);
-	int yLines = ceil(self.frame.size.height / gridY);
+	// determine the grid spacing
+	float gridSpaceX = 0;
+	while (gridSpaceX < minGridX)
+	{
+		gridSpaceX += xPad;
+	}
+	
+	float gridSpaceY = 0;
+	while (gridSpaceY < minGridY)
+	{
+		gridSpaceY += yPad;
+	}
+	
+	int xLines = ceil(self.frame.size.width / gridSpaceX);
+	int yLines = ceil(self.frame.size.height / gridSpaceY);
 	
 	// Vertical grid lines
 	int xPos = 0;
@@ -130,9 +143,8 @@
 		CGContextAddLineToPoint(cgContext, xPos, yPos - self.frame.size.height);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
-		xPos += gridX;
+		xPos += gridSpaceX;
 	}
-	CGContextSetLineDash(cgContext, 0, nil, 0);
 
 	// Horizontal lines
 	xPos = 0;
@@ -143,7 +155,7 @@
 		CGContextAddLineToPoint(cgContext, xPos + self.frame.size.width, yPos);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
-		yPos -= gridY;
+		yPos -= gridSpaceY;
 	}
 	
 	CGContextStrokePath(cgContext);
@@ -155,10 +167,6 @@
 	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
 	
-	// how big is the chart frame, and then space the points evenly across that area
-	float xPad = self.frame.size.width / (totalPoints - 1);
-	float yPad = self.frame.size.height / (chartRange.max - chartRange.min);
-	
 	// baseline is the bottom line of the chart
 	float baseline = self.frame.size.height;
 	CGPoint currentPoint = CGPointMake(0, baseline);
@@ -166,6 +174,7 @@
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextSetLineWidth(cgContext, 1.0f);
 	CGContextBeginPath(cgContext);
+	CGContextSetLineDash(cgContext, 0, nil, 0);
 	
 	CGPoint endPoint = CGPointZero;
 	int totalLines = [self.dataProvider count];
@@ -224,6 +233,11 @@
 	GRRange range;
 	range.min = min;
 	range.max = max;
+	
+	int totalPoints = [firstSeries.data count];
+	xPad = round(self.frame.size.width / (totalPoints - 1));
+	yPad = self.frame.size.height / (range.max - range.min);
+	NSLog(@"xPad: %f", xPad);
 	
 	return range;
 }
