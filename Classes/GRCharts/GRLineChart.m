@@ -174,9 +174,6 @@
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
 		for (int k = 0; k < totalPoints; k++)
 		{	
-			endPoint.x += xPad;
-			endPoint.y = baseline - ([[cSeries.data objectAtIndex:k] floatValue] - chartRange.min) * yPad;
-			
 			if (k == 0)
 			{
 				currentPoint.x = 0;
@@ -185,6 +182,8 @@
 			}
 			else
 			{
+				endPoint.x += xPad;
+				endPoint.y = baseline - ([[cSeries.data objectAtIndex:k] floatValue] - chartRange.min) * yPad;
 				CGContextAddLineToPoint(cgContext, endPoint.x, endPoint.y);
 			}
 		}
