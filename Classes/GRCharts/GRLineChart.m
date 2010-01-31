@@ -39,6 +39,7 @@
 @implementation GRLineChart
 
 @synthesize dataProvider = _dataProvider;
+@synthesize gridX, gridY;
 
 #pragma mark -
 #pragma mark Initialization
@@ -46,6 +47,7 @@
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         // Initialization code
+		[self initVars];
     }
     return self;
 }
@@ -53,6 +55,9 @@
 - (void) initVars
 {
 	_dataProviderDirty = NO;
+	
+	gridX = 30;
+	gridY = 30;
 }
 
 #pragma mark -
@@ -93,7 +98,7 @@
 	
 	GRRange chartRange = [self getChartRange];
 	NSLog(@"Chart range: %f-%f", chartRange.min, chartRange.max);
-	//[self renderGrid:chartRange];
+	[self renderGrid:chartRange];
 	[self renderData:chartRange];
 	
 	redrawChart = NO;
@@ -108,10 +113,41 @@
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextBeginPath(cgContext);
 	
+	// Grid Lines
 	CGContextSetLineDash(cgContext, 0.0f, lineDash, 2);
-	CGContextSetLineWidth(cgContext, 0.1f);
+	CGContextSetLineWidth(cgContext, 0.3f);
+	UIColor *gridColor = [UIColor whiteColor];
 	
-	int totalPoints = [self.dataProvider count];
+	int xLines = floorf(self.frame.size.width / gridX);
+	int yLines = floorf(self.frame.size.height / gridY);
+	
+	// Horizontal grid lines
+	int xPos = 0;
+	int yPos = 0;
+	for (int x = 0; x < xLines; x++)
+	{
+		CGContextMoveToPoint(cgContext, xPos, yPos);
+		CGContextAddLineToPoint(cgContext, xPos, yPos + self.frame.size.height);
+		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
+		
+		xPos += gridX;
+	}
+	CGContextSetLineDash(cgContext, 0, nil, 0);
+
+	// vertical lines
+	xPos = 0;
+	yPos = 0;
+	for (int y = 0; y < yLines; y++)
+	{
+		CGContextMoveToPoint(cgContext, xPos, yPos);
+		CGContextAddLineToPoint(cgContext, xPos + self.frame.size.width, yPos);
+		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
+		
+		yPos += gridY;
+	}
+	
+	CGContextStrokePath(cgContext);
+	UIGraphicsEndImageContext();
 }
 
 - (void) renderData:(GRRange)chartRange
@@ -121,7 +157,6 @@
 	// how big is the chart frame, and then space the points evenly across that area
 	float xPad = self.frame.size.width / (totalPoints - 1);
 	float yPad = self.frame.size.height / (chartRange.max - chartRange.min);
-	NSLog(@"xPad: %f yPad: %f", xPad, yPad);
 	
 	float baseline = self.frame.size.height;
 	CGPoint currentPoint = CGPointMake(0, baseline);
@@ -129,6 +164,7 @@
 	currentPoint.y = baseline - ([[_dataProvider objectAtIndex:0] floatValue] - chartRange.min) * yPad;
 	
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
+	CGContextSetLineWidth(cgContext, 1.0f);
 	CGContextBeginPath(cgContext);
 	
 	CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);

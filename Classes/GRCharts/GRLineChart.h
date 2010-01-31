@@ -34,6 +34,8 @@
 	
 	BOOL	redrawChart;
 	
+	float		gridX;
+	float		gridY;
 }
 
 struct GRRange {
@@ -43,6 +45,9 @@ struct GRRange {
 typedef struct GRRange GRRange;
 
 @property (nonatomic, retain) NSArray *dataProvider;
+
+@property (nonatomic) float gridX;
+@property (nonatomic) float gridY;
 
 - (GRRange) getChartRange;
 
