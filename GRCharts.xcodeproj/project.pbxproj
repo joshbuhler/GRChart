@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		060C283C110CB05700D6C13F /* GRTestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 060C283B110CB05700D6C13F /* GRTestView.m */; };
 		063141E31115113F00C9EE5E /* GRLineSeries.m in Sources */ = {isa = PBXBuildFile; fileRef = 063141E21115113F00C9EE5E /* GRLineSeries.m */; };
+		063142021115167C00C9EE5E /* GRLineSeries.m in Sources */ = {isa = PBXBuildFile; fileRef = 063141E21115113F00C9EE5E /* GRLineSeries.m */; };
 		064ADC1F110C2FD200DB05E9 /* LogicTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 064ADC1E110C2FD200DB05E9 /* LogicTests.m */; };
 		064ADC30110C31FD00DB05E9 /* GRLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 065371E8110C254F00B3F85F /* GRLineChart.m */; };
 		065371E9110C254F00B3F85F /* GRLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 065371E8110C254F00B3F85F /* GRLineChart.m */; };
@@ -246,6 +247,7 @@
 			files = (
 				064ADC1F110C2FD200DB05E9 /* LogicTests.m in Sources */,
 				064ADC30110C31FD00DB05E9 /* GRLineChart.m in Sources */,
+				063142021115167C00C9EE5E /* GRLineSeries.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

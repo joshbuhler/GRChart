@@ -151,7 +151,8 @@
 }
 
 - (void) renderData:(GRRange)chartRange
-{
+{	
+	//*********
 	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
 	
@@ -163,23 +164,32 @@
 	float baseline = self.frame.size.height;
 	CGPoint currentPoint = CGPointMake(0, baseline);
 	
-	currentPoint.y = baseline - ([[_dataProvider objectAtIndex:0] floatValue] - chartRange.min) * yPad;
+	currentPoint.y = baseline - ([[firstSeries.data objectAtIndex:0] floatValue] - chartRange.min) * yPad;
 	
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextSetLineWidth(cgContext, 1.0f);
 	CGContextBeginPath(cgContext);
 	
-	CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);
-	
 	CGPoint endPoint = CGPointZero;
-	for (int i = 1; i < totalPoints; i++)
-	{	
-		endPoint.x += xPad;
-		endPoint.y = baseline - ([[_dataProvider objectAtIndex:i] floatValue] - chartRange.min) * yPad;
-		
-		CGContextAddLineToPoint(cgContext, endPoint.x, endPoint.y);		
-		CGContextSetStrokeColorWithColor(cgContext, [UIColor orangeColor].CGColor);
-		
+	int totalLines = [self.dataProvider count];
+	for (int i = 0; i < totalLines; i++)
+	{
+		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
+		for (int k = 0; k < totalPoints; k++)
+		{	
+			endPoint.x += xPad;
+			endPoint.y = baseline - ([[cSeries.data objectAtIndex:k] floatValue] - chartRange.min) * yPad;
+			
+			if (k == 0)
+			{
+				CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);
+			}
+			else
+			{
+				CGContextAddLineToPoint(cgContext, endPoint.x, endPoint.y);
+			}
+		}
+		CGContextSetStrokeColorWithColor(cgContext, cSeries.lineColor.CGColor);
 	}
 	CGContextStrokePath(cgContext);
 	
