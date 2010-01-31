@@ -119,17 +119,8 @@
 	UIColor *gridColor = [UIColor whiteColor];
 	
 	// determine the grid spacing
-	float gridSpaceX = 0;
-	while (gridSpaceX < minGridX)
-	{
-		gridSpaceX += xPad;
-	}
-	
-	float gridSpaceY = 0;
-	while (gridSpaceY < minGridY)
-	{
-		gridSpaceY += yPad;
-	}
+	float gridSpaceX = xPad * ceil(minGridX / xPad);
+	float gridSpaceY = yPad * ceil(minGridY / yPad);
 	
 	int xLines = ceil(self.frame.size.width / gridSpaceX);
 	int yLines = ceil(self.frame.size.height / gridSpaceY);
