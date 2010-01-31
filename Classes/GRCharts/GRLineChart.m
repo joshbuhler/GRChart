@@ -163,8 +163,6 @@
 	float baseline = self.frame.size.height;
 	CGPoint currentPoint = CGPointMake(0, baseline);
 	
-	currentPoint.y = baseline - ([[firstSeries.data objectAtIndex:0] floatValue] - chartRange.min) * yPad;
-	
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextSetLineWidth(cgContext, 1.0f);
 	CGContextBeginPath(cgContext);
@@ -181,6 +179,8 @@
 			
 			if (k == 0)
 			{
+				currentPoint.x = 0;
+				currentPoint.y = baseline - ([[cSeries.data objectAtIndex:k] floatValue] - chartRange.min) * yPad;
 				CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);
 			}
 			else
@@ -190,6 +190,7 @@
 		}
 		CGContextSetStrokeColorWithColor(cgContext, cSeries.lineColor.CGColor);
 		CGContextStrokePath(cgContext);
+		endPoint = CGPointZero;
 	}
 	
 	

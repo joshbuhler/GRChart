@@ -54,26 +54,12 @@
 	
 	GRLineSeries *series2 = [[GRLineSeries alloc] initWithData:test2 andColor:[UIColor cyanColor]];
 	
-	
 	lineChart.dataProvider = [NSArray arrayWithObjects:series1, series2, nil];
-	
 	
 	[test1 release];
 	[test2 release];
 	[series1 release];
 	[series2 release];
-	
-	
-	
-	/*
-	 
-	 Use a GRLineSeries.
-	 GRLineSeries.data == NSArray
-	 GRLineSeries.color = UIColor
-	 
-	 
-	 
-	 */
 }
 
 
