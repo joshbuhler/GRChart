@@ -56,8 +56,8 @@
 {
 	_dataProviderDirty = NO;
 	
-	minGridX = 20;
-	minGridY = 20;
+	minGridX = 25;
+	minGridY = 25;
 }
 
 #pragma mark -
@@ -119,8 +119,17 @@
 	UIColor *gridColor = [UIColor whiteColor];
 	
 	// determine the grid spacing
-	float gridSpaceX = (xPad > minGridX) ? xPad : minGridX;
-	float gridSpaceY = (yPad > minGridY) ? yPad : minGridY;
+	float gridSpaceX = 0;
+	while (gridSpaceX < minGridX)
+	{
+		gridSpaceX += xPad;
+	}
+	
+	float gridSpaceY = 0;
+	while (gridSpaceY < minGridY)
+	{
+		gridSpaceY += yPad;
+	}
 	
 	int xLines = ceil(self.frame.size.width / gridSpaceX);
 	int yLines = ceil(self.frame.size.height / gridSpaceY);
@@ -136,7 +145,6 @@
 		
 		xPos += gridSpaceX;
 	}
-	CGContextSetLineDash(cgContext, 0, nil, 0);
 
 	// Horizontal lines
 	xPos = 0;
@@ -166,6 +174,7 @@
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextSetLineWidth(cgContext, 1.0f);
 	CGContextBeginPath(cgContext);
+	CGContextSetLineDash(cgContext, 0, nil, 0);
 	
 	CGPoint endPoint = CGPointZero;
 	int totalLines = [self.dataProvider count];
