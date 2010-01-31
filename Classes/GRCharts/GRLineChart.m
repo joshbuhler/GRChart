@@ -126,8 +126,8 @@
 	int yLines = ceil(self.frame.size.height / gridSpaceY);
 	
 	// Vertical grid lines
-	int xPos = 0;
-	int yPos = self.frame.size.height;
+	float xPos = 0;
+	float yPos = self.frame.size.height;
 	for (int x = 0; x < xLines; x++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
@@ -174,16 +174,28 @@
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
 		for (int k = 0; k < totalPoints; k++)
 		{	
+			NSObject *cObj = [cSeries.data objectAtIndex:k];
+			float pointValue;
+			
+			if (cSeries.yField != nil)
+			{
+				pointValue = [[(NSDictionary *)cObj objectForKey:cSeries.yField] floatValue];
+			}
+			else
+			{
+				pointValue = [(NSNumber *)cObj floatValue];
+			}
+			
 			if (k == 0)
 			{
 				currentPoint.x = 0;
-				currentPoint.y = baseline - ([[cSeries.data objectAtIndex:k] floatValue] - chartRange.min) * yPad;
+				currentPoint.y = baseline - (pointValue - chartRange.min) * yPad;
 				CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);
 			}
 			else
 			{
 				endPoint.x += xPad;
-				endPoint.y = baseline - ([[cSeries.data objectAtIndex:k] floatValue] - chartRange.min) * yPad;
+				endPoint.y = baseline - (pointValue - chartRange.min) * yPad;
 				CGContextAddLineToPoint(cgContext, endPoint.x, endPoint.y);
 			}
 		}
@@ -200,10 +212,22 @@
 {
 	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	
-	float testValue = [[firstSeries.data objectAtIndex:0] floatValue];
+	// gets the starting point for the series data to try and determine the chart range
+	float testValue;
+	NSObject *firstObj = [firstSeries.data objectAtIndex:0];
+	if (firstSeries.yField != nil)
+	{
+		testValue = [[(NSDictionary *)firstObj objectForKey:firstSeries.yField] floatValue];
+	}
+	else
+	{
+		testValue = [(NSNumber *)firstObj floatValue];
+	}
 	
+	
+	// now, time to actually determine the range
 	float min = testValue;
-	float max = testValue;	
+	float max = testValue;
 	
 	int totalLines = [self.dataProvider count];
 	for (int i = 0; i < totalLines; i++)
@@ -212,7 +236,18 @@
 		int total = [cSeries.data count];
 		for (int k = 0; k < total; k++)
 		{
-			testValue = [[cSeries.data objectAtIndex:k] floatValue];
+			NSObject *cObj = [cSeries.data objectAtIndex:k];
+			
+			if (cSeries.yField != nil)
+			{
+				testValue = [[(NSDictionary *)cObj objectForKey:cSeries.yField] floatValue];
+			}
+			else
+			{
+				testValue = [(NSNumber *)cObj floatValue];
+			}
+
+			
 			if (testValue > max)
 				max = testValue;
 			
@@ -225,10 +260,10 @@
 	range.min = min;
 	range.max = max;
 	
+	// this figures out the spacing of the datapoints so they can be evenly distributed across the grid
 	int totalPoints = [firstSeries.data count];
-	xPad = round(self.frame.size.width / (totalPoints - 1));
+	xPad = (self.frame.size.width / (totalPoints - 1));
 	yPad = self.frame.size.height / (range.max - range.min);
-	NSLog(@"xPad: %f", xPad);
 	
 	return range;
 }
