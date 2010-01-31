@@ -25,15 +25,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GRDataProvider.h"
+#import "GRLineSeries.h"
 
 @interface GRLineChart : UIView {
-	//id<GRDataProvider>	_dataProvider;
 	NSArray		*_dataProvider;
 	BOOL		_dataProviderDirty;
 	
 	BOOL	redrawChart;
 	
+	float		gridX;
+	float		gridY;
 }
 
 struct GRRange {
@@ -43,6 +44,9 @@ struct GRRange {
 typedef struct GRRange GRRange;
 
 @property (nonatomic, retain) NSArray *dataProvider;
+
+@property (nonatomic) float gridX;
+@property (nonatomic) float gridY;
 
 - (GRRange) getChartRange;
 
