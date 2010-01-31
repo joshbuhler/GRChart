@@ -36,8 +36,10 @@
 	lineChart = [[GRLineChart alloc] initWithFrame:CGRectMake(0, 0, 480, 320)];
 	[self.view addSubview:lineChart];
 	
+	int numPoints = 30;
+	
 	NSMutableArray *test1 = [[NSMutableArray alloc] init];
-	for (int i = 0; [test1 count] < 10; i++)
+	for (int i = 0; [test1 count] < numPoints; i++)
 	{
 		[test1 addObject:[NSNumber numberWithFloat:(float)(arc4random() % 10) / (float)((arc4random() % 10) + 1)]];
 		NSLog(@"test1 num: %f", [[test1 objectAtIndex:i] floatValue]);
@@ -46,7 +48,7 @@
 	GRLineSeries *series1 = [[GRLineSeries alloc] initWithData:test1 andColor:[UIColor orangeColor]];
 	
 	NSMutableArray *test2 = [[NSMutableArray alloc] init];
-	for (int i = 0; [test2 count] < 10; i++)
+	for (int i = 0; [test2 count] < numPoints; i++)
 	{
 		[test2 addObject:[NSNumber numberWithFloat:(float)(arc4random() % 10) / (float)((arc4random() % 10) + 1)]];
 		NSLog(@"test2 num: %f", [[test2 objectAtIndex:i] floatValue]);
