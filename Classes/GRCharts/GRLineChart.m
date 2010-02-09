@@ -210,57 +210,32 @@
 
 - (GRRange) getChartRange
 {
-	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
-	
-	// gets the starting point for the series data to try and determine the chart range
-	float testValue;
-	NSObject *firstObj = [firstSeries.data objectAtIndex:0];
-	if (firstSeries.yField != nil)
-	{
-		testValue = [[(NSDictionary *)firstObj objectForKey:firstSeries.yField] floatValue];
-	}
-	else
-	{
-		testValue = [(NSNumber *)firstObj floatValue];
-	}
-	
-	
-	// now, time to actually determine the range
-	float min = testValue;
-	float max = testValue;
+	NSMutableArray *maxValues = [[NSMutableArray alloc] init];
+	NSMutableArray *minValues = [[NSMutableArray alloc] init];
 	
 	int totalLines = [self.dataProvider count];
 	for (int i = 0; i < totalLines; i++)
 	{
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
-		int total = [cSeries.data count];
-		for (int k = 0; k < total; k++)
-		{
-			NSObject *cObj = [cSeries.data objectAtIndex:k];
-			
-			if (cSeries.yField != nil)
-			{
-				testValue = [[(NSDictionary *)cObj objectForKey:cSeries.yField] floatValue];
-			}
-			else
-			{
-				testValue = [(NSNumber *)cObj floatValue];
-			}
 
-			
-			if (testValue > max)
-				max = testValue;
-			
-			if (testValue < min)
-				min = testValue;
+		if (cSeries.yField != nil)
+		{
+			[maxValues addObject:[cSeries.data valueForKeyPath:[NSString stringWithFormat:@"@max.%@", cSeries.yField]]];
+			[minValues addObject:[cSeries.data valueForKeyPath:[NSString stringWithFormat:@"@min.%@", cSeries.yField]]];
+		}
+		else
+		{
+			[maxValues addObject:[cSeries.data valueForKeyPath:@"@max.floatValue"]];
+			[minValues addObject:[cSeries.data valueForKeyPath:@"@min.floatValue"]];
 		}
 	}
 	
 	GRRange range;
-	range.min = min;
-	range.max = max;
+	range.min = [[minValues valueForKeyPath:@"@min.floatValue"] floatValue];
+	range.max = [[maxValues valueForKeyPath:@"@max.floatValue"] floatValue];
 	
 	// this figures out the spacing of the datapoints so they can be evenly distributed across the grid
+	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
 	xPad = (self.frame.size.width / (totalPoints - 1));
 	yPad = self.frame.size.height / (range.max - range.min);
