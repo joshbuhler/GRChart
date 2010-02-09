@@ -119,24 +119,15 @@
 	UIColor *gridColor = [UIColor whiteColor];
 	
 	// determine the grid spacing
-	float gridSpaceX = 0;
-	while (gridSpaceX < minGridX)
-	{
-		gridSpaceX += xPad;
-	}
-	
-	float gridSpaceY = 0;
-	while (gridSpaceY < minGridY)
-	{
-		gridSpaceY += yPad;
-	}
+	float gridSpaceX = xPad * ceil(minGridX / xPad);
+	float gridSpaceY = yPad * ceil(minGridY / yPad);
 	
 	int xLines = ceil(self.frame.size.width / gridSpaceX);
 	int yLines = ceil(self.frame.size.height / gridSpaceY);
 	
 	// Vertical grid lines
-	int xPos = 0;
-	int yPos = self.frame.size.height;
+	float xPos = 0;
+	float yPos = self.frame.size.height;
 	for (int x = 0; x < xLines; x++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
@@ -183,16 +174,28 @@
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
 		for (int k = 0; k < totalPoints; k++)
 		{	
+			NSObject *cObj = [cSeries.data objectAtIndex:k];
+			float pointValue;
+			
+			if (cSeries.yField != nil)
+			{
+				pointValue = [[(NSDictionary *)cObj objectForKey:cSeries.yField] floatValue];
+			}
+			else
+			{
+				pointValue = [(NSNumber *)cObj floatValue];
+			}
+			
 			if (k == 0)
 			{
 				currentPoint.x = 0;
-				currentPoint.y = baseline - ([[cSeries.data objectAtIndex:k] floatValue] - chartRange.min) * yPad;
+				currentPoint.y = baseline - (pointValue - chartRange.min) * yPad;
 				CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);
 			}
 			else
 			{
 				endPoint.x += xPad;
-				endPoint.y = baseline - ([[cSeries.data objectAtIndex:k] floatValue] - chartRange.min) * yPad;
+				endPoint.y = baseline - (pointValue - chartRange.min) * yPad;
 				CGContextAddLineToPoint(cgContext, endPoint.x, endPoint.y);
 			}
 		}
@@ -207,37 +210,35 @@
 
 - (GRRange) getChartRange
 {
-	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
-	
-	float testValue = [[firstSeries.data objectAtIndex:0] floatValue];
-	
-	float min = testValue;
-	float max = testValue;	
+	NSMutableArray *maxValues = [[NSMutableArray alloc] init];
+	NSMutableArray *minValues = [[NSMutableArray alloc] init];
 	
 	int totalLines = [self.dataProvider count];
 	for (int i = 0; i < totalLines; i++)
 	{
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
-		int total = [cSeries.data count];
-		for (int k = 0; k < total; k++)
+
+		if (cSeries.yField != nil)
 		{
-			testValue = [[cSeries.data objectAtIndex:k] floatValue];
-			if (testValue > max)
-				max = testValue;
-			
-			if (testValue < min)
-				min = testValue;
+			[maxValues addObject:[cSeries.data valueForKeyPath:[NSString stringWithFormat:@"@max.%@", cSeries.yField]]];
+			[minValues addObject:[cSeries.data valueForKeyPath:[NSString stringWithFormat:@"@min.%@", cSeries.yField]]];
+		}
+		else
+		{
+			[maxValues addObject:[cSeries.data valueForKeyPath:@"@max.floatValue"]];
+			[minValues addObject:[cSeries.data valueForKeyPath:@"@min.floatValue"]];
 		}
 	}
 	
 	GRRange range;
-	range.min = min;
-	range.max = max;
+	range.min = [[minValues valueForKeyPath:@"@min.floatValue"] floatValue];
+	range.max = [[maxValues valueForKeyPath:@"@max.floatValue"] floatValue];
 	
+	// this figures out the spacing of the datapoints so they can be evenly distributed across the grid
+	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
-	xPad = round(self.frame.size.width / (totalPoints - 1));
+	xPad = (self.frame.size.width / (totalPoints - 1));
 	yPad = self.frame.size.height / (range.max - range.min);
-	NSLog(@"xPad: %f", xPad);
 	
 	return range;
 }

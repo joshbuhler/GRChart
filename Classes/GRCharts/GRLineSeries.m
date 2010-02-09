@@ -13,6 +13,7 @@
 
 @synthesize data;
 @synthesize lineColor;
+@synthesize xField, yField;
 
 - (id) initWithData:(NSArray *)lineData andColor:(UIColor *)color
 {
