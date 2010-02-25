@@ -32,6 +32,7 @@
 - (void) commitProperties;
 - (void) renderGrid:(GRRange)chartRange;
 - (void) renderData:(GRRange)chartRange;
+- (void) renderLabels:(GRRange)chartRange;
 
 @end
 
@@ -100,6 +101,7 @@
 	NSLog(@"Chart range: %f-%f", chartRange.min, chartRange.max);
 	[self renderGrid:chartRange];
 	[self renderData:chartRange];
+	//[self renderLabels:chartRange];
 	
 	redrawChart = NO;
 }
@@ -125,7 +127,7 @@
 	int xLines = ceil(self.frame.size.width / gridSpaceX);
 	int yLines = ceil(self.frame.size.height / gridSpaceY);
 	
-	// Vertical grid lines
+	// X-axis grid lines
 	float xPos = 0;
 	float yPos = self.frame.size.height;
 	for (int x = 0; x < xLines; x++)
@@ -137,7 +139,7 @@
 		xPos += gridSpaceX;
 	}
 
-	// Horizontal lines
+	// Y-Axis lines
 	xPos = 0;
 	yPos = self.frame.size.height;
 	for (int y = 0; y < yLines; y++)
@@ -146,7 +148,29 @@
 		CGContextAddLineToPoint(cgContext, xPos + self.frame.size.width, yPos);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
-		yPos -= gridSpaceY;
+		BOOL renderLabels = YES;
+		if (renderLabels)
+		{
+			float yValue = ((float)y / (float)yLines) * (chartRange.max - chartRange.min);
+			NSLog(@"yValue: %f", yValue);
+			NSString *labelString = [NSString stringWithFormat:@"%f", yValue];
+			CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+			[gridColor set];
+			[labelString drawInRect:CGRectMake(0, yPos - (labelSize.height / 2), labelSize.width, labelSize.height)
+						   withFont:[UIFont fontWithName:@"Arial" size:10]];
+			
+			// draw the top label
+			if (y == (yLines - 1))
+			{
+				labelString = [NSString stringWithFormat:@"%f", chartRange.max];
+				labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+				yPos = 0;// top of the grid - need to remove the hard-code eventually
+				[labelString drawInRect:CGRectMake(0, yPos - (labelSize.height / 2), labelSize.width, labelSize.height)
+							   withFont:[UIFont fontWithName:@"Arial" size:10]];
+			}
+		}
+		
+		yPos -= gridSpaceY;		
 	}
 	
 	CGContextStrokePath(cgContext);
@@ -207,6 +231,53 @@
 	
 	UIGraphicsEndImageContext();
 }
+/*
+- (void) renderLabels:(GRRange)chartRange
+{
+	// determine the grid spacing
+	float gridSpaceX = xPad * ceil(minGridX / xPad);
+	float gridSpaceY = yPad * ceil(minGridY / yPad);
+	
+	int xLines = ceil(self.frame.size.width / gridSpaceX);
+	int yLines = ceil(self.frame.size.height / gridSpaceY);
+	
+	// X-axis labels
+	float xPos = 0;
+	float yPos = self.frame.size.height;
+	for (int x = 0; x < xLines; x++)
+	{
+		CGContextMoveToPoint(cgContext, xPos, yPos);
+		CGContextAddLineToPoint(cgContext, xPos, yPos - self.frame.size.height);
+		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
+		
+		xPos += gridSpaceX;
+	}
+	
+	// Y-axis labels
+	xPos = 0;
+	yPos = self.frame.size.height;
+	for (int y = 0; y < yLines; y++)
+	{
+		CGContextMoveToPoint(cgContext, xPos, yPos);
+		CGContextAddLineToPoint(cgContext, xPos + self.frame.size.width, yPos);
+		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
+		
+		yPos -= gridSpaceY;
+		
+		id valueToFormat = [xValues objectAtIndex:index];
+		NSString *valueString;
+		
+		if (_xValuesFormatter) {
+			valueString = [_xValuesFormatter stringForObjectValue:valueToFormat];
+		} else {
+			valueString = [NSString stringWithFormat:@"%@", valueToFormat];
+		}
+		
+		[valueString drawInRect:CGRectMake(x, self.frame.size.height - 20.0f, 120.0f, 20.0f) withFont:font
+				  lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
+	}
+}
+*/
 
 - (GRRange) getChartRange
 {
