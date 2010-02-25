@@ -63,6 +63,8 @@
 	GRLineSeries *series2 = [[GRLineSeries alloc] initWithData:test2 andColor:[UIColor cyanColor]];
 	series2.xField = @"day";
 	series2.yField = @"price";
+	series2.xLabel = @"Date";
+	series2.yLabel = @"Price";
 	
 	lineChart.dataProvider = [NSArray arrayWithObjects:series1, series2, nil];
 	
