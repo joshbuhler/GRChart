@@ -33,11 +33,16 @@
 	
 	BOOL	redrawChart;
 	
+	CGRect		chartFrame;
+	
 	float		minGridX;
 	float		minGridY;
 	
 	float		xPad;
 	float		yPad;
+	
+	float		labelXPad;
+	float		labelYPad;
 	
 	NSFormatter	*yFormatter;
 }

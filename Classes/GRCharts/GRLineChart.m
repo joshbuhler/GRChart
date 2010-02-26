@@ -58,8 +58,13 @@
 {
 	_dataProviderDirty = NO;
 	
+	chartFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+	
 	minGridX = 25;
 	minGridY = 25;
+	
+	labelXPad = 5;
+	labelYPad = 5;
 }
 
 #pragma mark -
@@ -121,35 +126,45 @@
 	CGContextSetLineWidth(cgContext, 0.3f);
 	UIColor *gridColor = [UIColor whiteColor];
 	
+	// if we're rendering labels, adjust the grid frame to make room for them
+	BOOL renderLabels = YES;
+	if (renderLabels)
+	{
+		NSString *labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:chartRange.max]];
+		CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+		
+		chartFrame.origin.x += (labelSize.width + labelXPad);
+	}
+	
 	// determine the grid spacing
 	float gridSpaceX = xPad * ceil(minGridX / xPad);
 	float gridSpaceY = yPad * ceil(minGridY / yPad);
 	
-	int xLines = ceil(self.frame.size.width / gridSpaceX);
-	int yLines = ceil(self.frame.size.height / gridSpaceY);
+	int xLines = ceil(chartFrame.size.width / gridSpaceX);
+	int yLines = ceil(chartFrame.size.height / gridSpaceY);
 	
 	// X-axis grid lines
-	float xPos = 0;
-	float yPos = self.frame.size.height;
+	float xPos = chartFrame.origin.x;
+	float yPos = chartFrame.size.height;
 	for (int x = 0; x < xLines; x++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
-		CGContextAddLineToPoint(cgContext, xPos, yPos - self.frame.size.height);
+		CGContextAddLineToPoint(cgContext, xPos, yPos - chartFrame.size.height);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
 		xPos += gridSpaceX;
 	}
 
 	// Y-Axis lines
-	xPos = 0;
-	yPos = self.frame.size.height;
+	xPos = chartFrame.origin.x;
+	yPos = chartFrame.size.height;
 	for (int y = 0; y < yLines; y++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
-		CGContextAddLineToPoint(cgContext, xPos + self.frame.size.width, yPos);
+		CGContextAddLineToPoint(cgContext, xPos + chartFrame.size.width, yPos);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
-		BOOL renderLabels = YES;
+		
 		if (renderLabels)
 		{
 			float yValue = ((float)y / (float)yLines) * (chartRange.max - chartRange.min);
@@ -163,7 +178,7 @@
 			// draw the top label
 			if (y == (yLines - 1))
 			{
-				labelString = [NSString stringWithFormat:@"%f", chartRange.max];
+				labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:chartRange.max]];
 				labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 				yPos = 0;// top of the grid - need to remove the hard-code eventually
 				[labelString drawInRect:CGRectMake(0, yPos - (labelSize.height / 2), labelSize.width, labelSize.height)
@@ -184,8 +199,8 @@
 	int totalPoints = [firstSeries.data count];
 	
 	// baseline is the bottom line of the chart
-	float baseline = self.frame.size.height;
-	CGPoint currentPoint = CGPointMake(0, baseline);
+	float baseline = chartFrame.size.height;
+	CGPoint currentPoint = CGPointMake(chartFrame.origin.x, baseline);
 	
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextSetLineWidth(cgContext, 1.0f);
@@ -213,7 +228,7 @@
 			
 			if (k == 0)
 			{
-				currentPoint.x = 0;
+				currentPoint.x = chartFrame.origin.x;
 				currentPoint.y = baseline - (pointValue - chartRange.min) * yPad;
 				CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);
 			}
@@ -239,16 +254,16 @@
 	float gridSpaceX = xPad * ceil(minGridX / xPad);
 	float gridSpaceY = yPad * ceil(minGridY / yPad);
 	
-	int xLines = ceil(self.frame.size.width / gridSpaceX);
-	int yLines = ceil(self.frame.size.height / gridSpaceY);
+	int xLines = ceil(chartFrame.size.width / gridSpaceX);
+	int yLines = ceil(chartFrame.size.height / gridSpaceY);
 	
 	// X-axis labels
 	float xPos = 0;
-	float yPos = self.frame.size.height;
+	float yPos = chartFrame.size.height;
 	for (int x = 0; x < xLines; x++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
-		CGContextAddLineToPoint(cgContext, xPos, yPos - self.frame.size.height);
+		CGContextAddLineToPoint(cgContext, xPos, yPos - chartFrame.size.height);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
 		xPos += gridSpaceX;
@@ -256,11 +271,11 @@
 	
 	// Y-axis labels
 	xPos = 0;
-	yPos = self.frame.size.height;
+	yPos = chartFrame.size.height;
 	for (int y = 0; y < yLines; y++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
-		CGContextAddLineToPoint(cgContext, xPos + self.frame.size.width, yPos);
+		CGContextAddLineToPoint(cgContext, xPos + chartFrame.size.width, yPos);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
 		yPos -= gridSpaceY;
@@ -274,7 +289,7 @@
 			valueString = [NSString stringWithFormat:@"%@", valueToFormat];
 		}
 		
-		[valueString drawInRect:CGRectMake(x, self.frame.size.height - 20.0f, 120.0f, 20.0f) withFont:font
+		[valueString drawInRect:CGRectMake(x, chartFrame.size.height - 20.0f, 120.0f, 20.0f) withFont:font
 				  lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
 	}
 }
@@ -309,8 +324,8 @@
 	// this figures out the spacing of the datapoints so they can be evenly distributed across the grid
 	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
-	xPad = (self.frame.size.width / (totalPoints - 1));
-	yPad = self.frame.size.height / (range.max - range.min);
+	xPad = (chartFrame.size.width / (totalPoints - 1));
+	yPad = chartFrame.size.height / (range.max - range.min);
 	
 	return range;
 }
