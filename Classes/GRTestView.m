@@ -66,6 +66,12 @@
 	series2.xLabel = @"Date";
 	series2.yLabel = @"Price";
 	
+	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+	[numberFormatter setMinimumFractionDigits:0];
+	[numberFormatter setMaximumFractionDigits:2];
+	lineChart.yFormatter = numberFormatter;
+	
 	lineChart.dataProvider = [NSArray arrayWithObjects:series1, series2, nil];
 	
 	[test1 release];

@@ -41,6 +41,7 @@
 
 @synthesize dataProvider = _dataProvider;
 @synthesize minGridX, minGridY;
+@synthesize yFormatter;
 
 #pragma mark -
 #pragma mark Initialization
@@ -153,7 +154,7 @@
 		{
 			float yValue = ((float)y / (float)yLines) * (chartRange.max - chartRange.min);
 			NSLog(@"yValue: %f", yValue);
-			NSString *labelString = [NSString stringWithFormat:@"%f", yValue];
+			NSString *labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:yValue]];
 			CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 			[gridColor set];
 			[labelString drawInRect:CGRectMake(0, yPos - (labelSize.height / 2), labelSize.width, labelSize.height)
