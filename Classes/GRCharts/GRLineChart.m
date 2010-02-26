@@ -130,7 +130,16 @@
 	BOOL renderLabels = YES;
 	if (renderLabels)
 	{
-		NSString *labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:chartRange.max]];
+		NSString *labelString;
+		if (yFormatter != nil)
+		{
+			labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:chartRange.max]];
+		}
+		else
+		{
+			labelString = [[NSNumber numberWithFloat:chartRange.max] stringValue];
+		}
+
 		CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 		
 		chartFrame.origin.x += (labelSize.width + labelXPad);
@@ -168,8 +177,17 @@
 		if (renderLabels)
 		{
 			float yValue = ((float)y / (float)yLines) * (chartRange.max - chartRange.min);
-			NSLog(@"yValue: %f", yValue);
-			NSString *labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:yValue]];
+			
+			NSString *labelString;
+			if (yFormatter != nil)
+			{
+				labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:yValue]];
+			}
+			else
+			{
+				labelString = [[NSNumber numberWithFloat:yValue] stringValue];
+			}
+
 			CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 			[gridColor set];
 			[labelString drawInRect:CGRectMake(0, yPos - (labelSize.height / 2), labelSize.width, labelSize.height)
@@ -178,7 +196,15 @@
 			// draw the top label
 			if (y == (yLines - 1))
 			{
-				labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:chartRange.max]];
+				if (yFormatter != nil)
+				{
+					labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:chartRange.max]];
+				}
+				else
+				{
+					labelString = [[NSNumber numberWithFloat:chartRange.max] stringValue];
+				}
+				
 				labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 				yPos = 0;// top of the grid - need to remove the hard-code eventually
 				[labelString drawInRect:CGRectMake(0, yPos - (labelSize.height / 2), labelSize.width, labelSize.height)
