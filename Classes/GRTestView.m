@@ -66,6 +66,8 @@
 	series2.xLabel = @"Date";
 	series2.yLabel = @"Price";
 	
+	lineChart.chartTitle = @"Item Price over Time";
+	
 	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
 	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
 	[numberFormatter setMinimumFractionDigits:0];

@@ -45,6 +45,9 @@
 	float		labelYPad;
 	
 	NSFormatter	*yFormatter;
+	NSFormatter *xFormatter;
+	
+	NSString	*chartTitle;
 }
 
 struct GRRange {
@@ -59,6 +62,9 @@ typedef struct GRRange GRRange;
 @property (nonatomic) float minGridY;
 
 @property (nonatomic, retain) NSFormatter *yFormatter;
+@property (nonatomic, retain) NSFormatter *xFormatter;
+
+@property (nonatomic, retain) NSString *chartTitle;
 
 - (GRRange) getChartRange;
 
