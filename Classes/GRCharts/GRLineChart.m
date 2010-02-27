@@ -226,7 +226,7 @@
 	CGContextBeginPath(cgContext);
 	CGContextSetLineDash(cgContext, 0, nil, 0);
 	
-	CGPoint endPoint = CGPointZero;
+	CGPoint endPoint = CGPointMake(chartFrame.origin.x, baseline);
 	int totalLines = [self.dataProvider count];
 	for (int i = 0; i < totalLines; i++)
 	{
@@ -260,7 +260,7 @@
 		}
 		CGContextSetStrokeColorWithColor(cgContext, cSeries.lineColor.CGColor);
 		CGContextStrokePath(cgContext);
-		endPoint = CGPointZero;
+		endPoint = CGPointMake(chartFrame.origin.x, baseline);
 	}
 	
 	UIGraphicsEndImageContext();
@@ -284,6 +284,7 @@
 		
 		CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 		chartFrame.origin.x += (labelSize.width + labelXPad);
+		chartFrame.size.width -= (labelSize.width + labelXPad);
 	}
 	
 	// if there's a title, adjust the grid for that
