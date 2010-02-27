@@ -190,7 +190,10 @@
 
 			CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 			[gridColor set];
-			[labelString drawInRect:CGRectMake(0, yPos - (labelSize.height / 2), labelSize.width, labelSize.height)
+			
+			float labelY = (y == 0) ? yPos - labelSize.height : yPos - (labelSize.height / 2);
+			
+			[labelString drawInRect:CGRectMake(0, labelY, labelSize.width, labelSize.height)
 						   withFont:[UIFont fontWithName:@"Arial" size:10]];
 			
 			// draw the top label
@@ -206,8 +209,8 @@
 				}
 				
 				labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
-				yPos = 0;// top of the grid - need to remove the hard-code eventually
-				[labelString drawInRect:CGRectMake(0, yPos - (labelSize.height / 2), labelSize.width, labelSize.height)
+				yPos = chartFrame.origin.y;
+				[labelString drawInRect:CGRectMake(0, yPos, labelSize.width, labelSize.height)
 							   withFont:[UIFont fontWithName:@"Arial" size:10]];
 			}
 		}
