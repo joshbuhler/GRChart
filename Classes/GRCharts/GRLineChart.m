@@ -192,8 +192,8 @@
 				}
 				
 				labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
-				yPos = chartFrame.origin.y;
-				[labelString drawInRect:CGRectMake(0, yPos, labelSize.width, labelSize.height)
+				labelY = (chartTitle != nil) ? chartFrame.origin.y - (labelSize.height / 2) : chartFrame.origin.y;
+				[labelString drawInRect:CGRectMake(0, labelY, labelSize.width, labelSize.height)
 							   withFont:[UIFont fontWithName:@"Arial" size:10]];
 			}
 		}

@@ -39,6 +39,7 @@
 	
 	GRTestView *testView = [[GRTestView alloc] init];
 	[window addSubview:testView.view];
+	[testView release];
 }
 
 
