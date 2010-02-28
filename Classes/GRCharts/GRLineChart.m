@@ -136,14 +136,33 @@
 	int xLines = ceil(chartFrame.size.width / gridSpaceX);
 	int yLines = ceil(chartFrame.size.height / gridSpaceY);
 	
+	
+	
 	// X-axis grid lines
 	float xPos = chartFrame.origin.x;
 	float yPos = chartFrame.origin.y + chartFrame.size.height;
+	CGRect lastLabelRect = CGRectZero;	
 	for (int x = 0; x < xLines; x++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
 		CGContextAddLineToPoint(cgContext, xPos, yPos - chartFrame.size.height);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
+		
+		// draw the label - if it will overlap, then don't draw it
+		NSString *xLabelTxt = @"xLabel";
+		CGSize labelSize = [xLabelTxt sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+		[gridColor set];
+		
+		float labelX = xPos - (labelSize.width / 2);
+		
+		CGRect cLabelRect = CGRectMake(labelX, (yPos + labelYPad), labelSize.width, labelSize.height);
+		
+		if (!CGRectIntersectsRect(lastLabelRect, cLabelRect))
+		{
+			[xLabelTxt drawInRect:cLabelRect
+						 withFont:[UIFont fontWithName:@"Arial" size:10]];
+			lastLabelRect = cLabelRect;
+		}
 		
 		xPos += gridSpaceX;
 	}
@@ -285,6 +304,8 @@
 		CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 		chartFrame.origin.x += (labelSize.width + labelXPad);
 		chartFrame.size.width -= (labelSize.width + labelXPad);
+		
+		chartFrame.size.height -= (labelSize.height + labelYPad);
 	}
 	
 	// if there's a title, adjust the grid for that
