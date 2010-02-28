@@ -57,7 +57,8 @@
 		[newObj setObject:[NSNumber numberWithInt:i]
 										   forKey:@"day"];
 		[test2 addObject:newObj];
-		NSLog(@"test2 num: %f", rndValue);
+		//NSLog(@"test2 num: %f", rndValue);
+		[newObj release];
 	}
 	
 	GRLineSeries *series2 = [[GRLineSeries alloc] initWithData:test2 andColor:[UIColor cyanColor]];
