@@ -180,6 +180,10 @@
 		{
 			float yValue = ((float)y / (float)yLines) * (chartRange.max - chartRange.min);
 			
+			if (y == 0)
+				yValue = chartRange.min;
+			NSLog(@"yValue: %f", yValue);
+			
 			NSString *labelString;
 			if (yFormatter != nil)
 			{
