@@ -361,6 +361,9 @@
 	range.min = [[minValues valueForKeyPath:@"@min.floatValue"] floatValue];
 	range.max = [[maxValues valueForKeyPath:@"@max.floatValue"] floatValue];
 	
+	[minValues release];
+	[maxValues release];
+	
 	return range;
 }
 
