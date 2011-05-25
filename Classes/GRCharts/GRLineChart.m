@@ -3,7 +3,7 @@
 //  GRCharts
 //
 //  Created by Joshua Buhler on 1/23/10.
-//  Copyright (c) 2010 Josh Buhler - joshbuhler.com
+//  Copyright (c) 2010 Josh Buhler - ghostRadio.net
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,8 @@
 #pragma mark Initialization
 
 - (id)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
+    self = [super initWithFrame:frame];
+    if (self) {
         // Initialization code
 		[self initVars];
     }
@@ -247,43 +248,72 @@
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextSetLineWidth(cgContext, 1.0f);
 	CGContextBeginPath(cgContext);
-	CGContextSetLineDash(cgContext, 0, nil, 0);
 	
-	CGPoint endPoint = CGPointMake(chartFrame.origin.x, baseline);
 	int totalLines = [self.dataProvider count];
 	for (int i = 0; i < totalLines; i++)
 	{
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
+        
+        // set the series line color
+        CGContextSetStrokeColorWithColor(cgContext, cSeries.lineColor.CGColor);
+        
+        CGPoint segmentStart = currentPoint;
+        CGPoint segmentEnd = currentPoint;
+        
 		for (int k = 0; k < totalPoints; k++)
 		{	
 			NSObject *cObj = [cSeries.data objectAtIndex:k];
-			float pointValue;
-			
-			if (cSeries.yField != nil)
-			{
-				pointValue = [[(NSDictionary *)cObj objectForKey:cSeries.yField] floatValue];
-			}
-			else
-			{
-				pointValue = [(NSNumber *)cObj floatValue];
-			}
-			
-			if (k == 0)
-			{
-				currentPoint.x = chartFrame.origin.x;
-				currentPoint.y = baseline - (pointValue - chartRange.min) * yPad;
-				CGContextMoveToPoint(cgContext, currentPoint.x, currentPoint.y);
-			}
-			else
-			{
-				endPoint.x += xPad;
-				endPoint.y = baseline - (pointValue - chartRange.min) * yPad;
-				CGContextAddLineToPoint(cgContext, endPoint.x, endPoint.y);
-			}
+            
+            BOOL drawSegment = NO;
+            if (cObj != [NSNull null])
+            {
+                float pointValue;
+                
+                if (cSeries.yField != nil)
+                {
+                    pointValue = [[(NSDictionary *)cObj objectForKey:cSeries.yField] floatValue];
+                }
+                else
+                {
+                    pointValue = [(NSNumber *)cObj floatValue];
+                }
+                
+                currentPoint.y = baseline - (pointValue - chartRange.min) * yPad;
+                
+                // draw a solid line
+                CGContextSetLineDash(cgContext, 0, nil, 0);
+                drawSegment = YES;
+            }
+            
+            // what sort of line should we draw?
+            if (k > 0)
+            {
+                if (cObj == [NSNull null] || [cSeries.data objectAtIndex:k - 1] == [NSNull null])
+                {
+                    // null value, so draw a dashed line to the next complete point
+                    CGFloat dash[] = {5.0, 5.0};
+                    CGContextSetLineDash(cgContext, 0, dash, 2);
+                }
+            }
+            
+            // advance the drawing point to the next column            
+            if (k == 0)
+            {
+                currentPoint.x = chartFrame.origin.x;
+            }
+            else
+            {
+                currentPoint.x += xPad;
+            }
+            segmentEnd = currentPoint;
+            
+            if (drawSegment)
+            {
+                CGPoint points[] = {segmentStart, segmentEnd};
+                CGContextStrokeLineSegments(cgContext, points, 2);
+                segmentStart = segmentEnd;
+            }
 		}
-		CGContextSetStrokeColorWithColor(cgContext, cSeries.lineColor.CGColor);
-		CGContextStrokePath(cgContext);
-		endPoint = CGPointMake(chartFrame.origin.x, baseline);
 	}
 	
 	UIGraphicsEndImageContext();
@@ -344,16 +374,20 @@
 	for (int i = 0; i < totalLines; i++)
 	{
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
+        
+        // filter any null values out of the series before searching for the min/max
+        NSMutableArray *tmpSeries = [NSMutableArray arrayWithArray:cSeries.data];
+        [tmpSeries removeObjectIdenticalTo:[NSNull null]];
 
 		if (cSeries.yField != nil)
 		{
-			[maxValues addObject:[cSeries.data valueForKeyPath:[NSString stringWithFormat:@"@max.%@", cSeries.yField]]];
-			[minValues addObject:[cSeries.data valueForKeyPath:[NSString stringWithFormat:@"@min.%@", cSeries.yField]]];
+			[maxValues addObject:[tmpSeries valueForKeyPath:[NSString stringWithFormat:@"@max.%@", cSeries.yField]]];
+			[minValues addObject:[tmpSeries valueForKeyPath:[NSString stringWithFormat:@"@min.%@", cSeries.yField]]];
 		}
 		else
 		{
-			[maxValues addObject:[cSeries.data valueForKeyPath:@"@max.floatValue"]];
-			[minValues addObject:[cSeries.data valueForKeyPath:@"@min.floatValue"]];
+			[maxValues addObject:[tmpSeries valueForKeyPath:@"@max.floatValue"]];
+			[minValues addObject:[tmpSeries valueForKeyPath:@"@min.floatValue"]];
 		}
 	}
 	

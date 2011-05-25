@@ -42,11 +42,18 @@
 	for (int i = 0; [test1 count] < numPoints; i++)
 	{
 		[test1 addObject:[NSNumber numberWithFloat:(float)(arc4random() % 10) / (float)((arc4random() % 10) + 1)]];
+//        [test1 addObject:[NSNumber numberWithInt:i]];
 		NSLog(@"test1 num: %f", [[test1 objectAtIndex:i] floatValue]);
 	}
+    
+    // insert a missing value or two, just for testing that
+    [test1 replaceObjectAtIndex:3 withObject:[NSNull null]];
+    [test1 replaceObjectAtIndex:6 withObject:[NSNull null]];
+    [test1 replaceObjectAtIndex:7 withObject:[NSNull null]];
 	
 	GRLineSeries *series1 = [[GRLineSeries alloc] initWithData:test1 andColor:[UIColor orangeColor]];
 	
+    /*
 	NSMutableArray *test2 = [[NSMutableArray alloc] init];
 	for (int i = 0; [test2 count] < numPoints; i++)
 	{
@@ -66,7 +73,7 @@
 	series2.yField = @"price";
 	series2.xLabel = @"Date";
 	series2.yLabel = @"Price";
-	
+	*/
 	lineChart.chartTitle = @"Item Price / Time";
 	
 	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
@@ -75,12 +82,13 @@
 	[numberFormatter setMaximumFractionDigits:2];
 	lineChart.yFormatter = numberFormatter;
 	
-	lineChart.dataProvider = [NSArray arrayWithObjects:series1, series2, nil];
+	//lineChart.dataProvider = [NSArray arrayWithObjects:series1, series2, nil];
+    lineChart.dataProvider = [NSArray arrayWithObjects:series1, nil];
 	
 	[test1 release];
-	[test2 release];
+	//[test2 release];
 	[series1 release];
-	[series2 release];
+	//[series2 release];
 }
 
 
