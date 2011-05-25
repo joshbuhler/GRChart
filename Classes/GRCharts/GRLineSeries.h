@@ -3,7 +3,7 @@
 //  GRCharts
 //
 //  Created by Joshua Buhler on 1/30/10.
-//  Copyright (c) 2010 Josh Buhler - ghostRadio.net
+//  Copyright (c) 2010 Josh Buhler - joshbuhler.com
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
