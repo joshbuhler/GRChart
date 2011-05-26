@@ -123,19 +123,27 @@
 
 
 
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-	if (!redrawChart)
-		return;
-	
-	GRRange chartRange = [self getChartRange];
-	NSLog(@"Chart range: %f-%f", chartRange.min, chartRange.max);
-	[self calcChartArea];
-	[self renderGrid];
-	[self renderData];
-    [self renderGuides];
-	
-	redrawChart = NO;
+- (void)drawRect:(CGRect)rect
+{
+    CGContextRef cgContext = UIGraphicsGetCurrentContext();
+    CGContextClearRect(cgContext, chartFrame);
+    
+    [self getChartRange];
+    [self calcChartArea];
+    
+//    // Drawing code
+//	if (redrawChart)
+//    {
+        [self renderGrid];
+        [self renderData];
+        redrawChart = NO;
+//    }
+//    
+//    if (redrawGuides)
+//    {
+        [self renderGuides];
+        redrawGuides = NO;
+//    }
 }
 
 - (void) renderGrid
@@ -259,10 +267,7 @@
 
 - (float) axisXForValue:(float)value
 {
-    // doesn't work yet
-    return 0;
-//    float baseline = chartFrame.origin.y + chartFrame.size.height;
-//    return baseline - (value - _chartRange.min) * yPad;
+    return chartFrame.origin.x + (xPad * value);
 }
 
 
@@ -274,7 +279,6 @@
 
 - (void) renderData
 {	
-    NSLog(@"testy2");
 	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
 	
@@ -364,7 +368,6 @@
 
 - (void) renderGuides
 {
-    return; // not quite ready to rock yet
     CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextSetLineWidth(cgContext, 1.0f);
 	CGContextBeginPath(cgContext);
@@ -373,10 +376,10 @@
 	for (int i = 0; i < totalLines; i++)
 	{
         GRGuideLine *cLine = (GRGuideLine *)[self.guideLines objectAtIndex:i];
-        
+        NSLog(@"cLine: %f", cLine.value);
         if (cLine.needsRedraw == NO)
             continue;
-        
+        NSLog(@"alsdkjf");
         // set the series line color
         CGContextSetStrokeColorWithColor(cgContext, cLine.lineColor.CGColor);        
         CGContextSetLineDash(cgContext, 0, nil, 0);
@@ -386,14 +389,16 @@
         
         if (cLine.orientation == GUIDELINE_VERTICAL)
         {
-            lineStart = CGPointMake(4, chartFrame.origin.y);
-            lineEnd = CGPointMake(4, chartFrame.origin.y + chartFrame.size.height);
+            float xPoint = [self axisXForValue:cLine.value];
+            lineStart = CGPointMake(xPoint, chartFrame.origin.y);
+            lineEnd = CGPointMake(xPoint, chartFrame.origin.y + chartFrame.size.height);
         }
         
         if (cLine.orientation == GUIDELINE_HORIZONTAL)
         {
-            lineStart = CGPointMake(chartFrame.origin.x, [self axisYForValue:cLine.value]);
-            lineEnd = CGPointMake(chartFrame.origin.x + chartFrame.size.width, 10);
+            float yPoint = [self axisYForValue:cLine.value];
+            lineStart = CGPointMake(chartFrame.origin.x, yPoint);
+            lineEnd = CGPointMake(chartFrame.origin.x + chartFrame.size.width, yPoint);
         }
         
 		CGPoint points[] = {lineStart, lineEnd};

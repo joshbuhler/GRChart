@@ -95,17 +95,35 @@
     redLine.lineColor = [UIColor redColor];
     
     GRGuideLine *blueLine = [[GRGuideLine alloc] init];
-    blueLine.value = 7;
+    blueLine.value = 7.5;
     blueLine.lineColor = [UIColor blueColor];
+    
+    GRGuideLine *greenLine = [[GRGuideLine alloc] init];
+    greenLine.value = 4;
+    greenLine.lineColor = [UIColor greenColor];
+    greenLine.orientation = GUIDELINE_HORIZONTAL;
     
     NSMutableArray *guides = [[NSMutableArray alloc] init];
     [guides addObject:redLine];
     [guides addObject:blueLine];
+    [guides addObject:greenLine];
     
     lineChart.guideLines = guides;
     
     [blueLine release];
+    [greenLine release];
     [guides release];
+    
+    // test animating a guide line - this doesn't work at 
+//    [NSTimer scheduledTimerWithTimeInterval:.25f
+//                                     target:self selector:@selector(onTimer:)
+//                                   userInfo:nil repeats:YES];
+}
+
+- (void) onTimer:(NSTimer *)timer
+{
+    redLine.value++;
+    [lineChart setNeedsDisplay];
 }
 
 
