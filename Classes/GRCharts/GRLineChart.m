@@ -317,6 +317,9 @@
                 
                 currentPoint.y = [self axisYForValue:pointValue];
                 
+                if (k == 0)
+                    segmentStart.y = currentPoint.y;
+                
                 // draw a solid line
                 CGContextSetLineDash(cgContext, 0, nil, 0);
                 drawSegment = YES;
@@ -351,6 +354,9 @@
                 segmentStart = segmentEnd;
             }
 		}
+        
+        // done w/ the series, reset the xPoint
+        currentPoint.x = chartFrame.origin.x;
 	}
 	
 	UIGraphicsEndImageContext();
