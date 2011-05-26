@@ -26,9 +26,12 @@
 
 #import <UIKit/UIKit.h>
 #import "GRLineChart.h"
+#import "GRGuideLine.h"
 
 @interface GRTestView : UIViewController {
 	GRLineChart	*lineChart;
+    
+    GRGuideLine *redLine;
 }
 
 @end

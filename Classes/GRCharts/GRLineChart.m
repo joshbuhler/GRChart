@@ -30,11 +30,13 @@
 
 - (void) initVars;
 - (void) commitProperties;
-- (void) calcChartArea:(GRRange)chartRange;
-- (void) renderGrid:(GRRange)chartRange;
-- (void) renderData:(GRRange)chartRange;
-- (void) renderLabels:(GRRange)chartRange;
-
+- (void) calcChartArea;
+- (void) renderGrid;
+- (void) renderData;
+- (void) renderLabels;
+- (void) renderGuides;
+- (float) axisYForValue:(float)value;
+- (float) axisXForValue:(float)value;
 @end
 
 
@@ -44,6 +46,7 @@
 @synthesize minGridX, minGridY;
 @synthesize yFormatter, xFormatter;
 @synthesize chartTitle;
+@synthesize guideLines;
 
 #pragma mark -
 #pragma mark Initialization
@@ -60,6 +63,10 @@
 - (void) initVars
 {
 	_dataProviderDirty = NO;
+    _guidelinesDirty = NO;
+    
+    redrawChart = NO;
+    redrawGuides = NO;
 	
 	chartFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
 	
@@ -86,6 +93,16 @@
 	[self commitProperties];
 }
 
+- (void) setGuideLines:(NSMutableArray *)value
+{
+    [guideLines release];
+    
+    guideLines = [value retain];
+    
+    _guidelinesDirty = YES;
+    [self commitProperties];
+}
+
 - (void) commitProperties
 {
 	if (_dataProviderDirty)
@@ -93,7 +110,12 @@
 		redrawChart = YES;
 		_dataProviderDirty = NO;
 	}
-	
+    
+    if (_guidelinesDirty)
+    {
+        redrawGuides = YES;
+        _guidelinesDirty = NO;
+    }
 }
 
 #pragma mark -
@@ -108,14 +130,15 @@
 	
 	GRRange chartRange = [self getChartRange];
 	NSLog(@"Chart range: %f-%f", chartRange.min, chartRange.max);
-	[self calcChartArea:chartRange];
-	[self renderGrid:chartRange];
-	[self renderData:chartRange];
+	[self calcChartArea];
+	[self renderGrid];
+	[self renderData];
+    [self renderGuides];
 	
 	redrawChart = NO;
 }
 
-- (void) renderGrid:(GRRange)chartRange
+- (void) renderGrid
 {
 	CGFloat lineDash[2];
 	lineDash[0] = 5.0f;
@@ -136,8 +159,6 @@
 	
 	int xLines = ceil(chartFrame.size.width / gridSpaceX);
 	int yLines = ceil(chartFrame.size.height / gridSpaceY);
-	
-	
 	
 	// X-axis grid lines
 	float xPos = chartFrame.origin.x;
@@ -179,11 +200,11 @@
 		BOOL renderLabels = YES;
 		if (renderLabels)
 		{
-			float yValue = ((float)y / (float)yLines) * (chartRange.max - chartRange.min);
+			float yValue = ((float)y / (float)yLines) * (_chartRange.max - _chartRange.min);
 			
 			if (y == 0)
-				yValue = chartRange.min;
-			NSLog(@"yValue: %f", yValue);
+				yValue = _chartRange.min;
+			//NSLog(@"yValue: %f", yValue);
 			
 			NSString *labelString;
 			if (yFormatter != nil)
@@ -208,11 +229,11 @@
 			{
 				if (yFormatter != nil)
 				{
-					labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:chartRange.max]];
+					labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:_chartRange.max]];
 				}
 				else
 				{
-					labelString = [[NSNumber numberWithFloat:chartRange.max] stringValue];
+					labelString = [[NSNumber numberWithFloat:_chartRange.max] stringValue];
 				}
 				
 				labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
@@ -236,8 +257,24 @@
 	UIGraphicsEndImageContext();
 }
 
-- (void) renderData:(GRRange)chartRange
+- (float) axisXForValue:(float)value
+{
+    // doesn't work yet
+    return 0;
+//    float baseline = chartFrame.origin.y + chartFrame.size.height;
+//    return baseline - (value - _chartRange.min) * yPad;
+}
+
+
+- (float) axisYForValue:(float)value
+{
+    float baseline = chartFrame.origin.y + chartFrame.size.height;
+    return baseline - (value - _chartRange.min) * yPad;
+}
+
+- (void) renderData
 {	
+    NSLog(@"testy2");
 	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
 	
@@ -278,7 +315,7 @@
                     pointValue = [(NSNumber *)cObj floatValue];
                 }
                 
-                currentPoint.y = baseline - (pointValue - chartRange.min) * yPad;
+                currentPoint.y = [self axisYForValue:pointValue];
                 
                 // draw a solid line
                 CGContextSetLineDash(cgContext, 0, nil, 0);
@@ -319,7 +356,47 @@
 	UIGraphicsEndImageContext();
 }
 
-- (void) calcChartArea:(GRRange)chartRange
+- (void) renderGuides
+{
+    return; // not quite ready to rock yet
+    CGContextRef cgContext = UIGraphicsGetCurrentContext();
+	CGContextSetLineWidth(cgContext, 1.0f);
+	CGContextBeginPath(cgContext);
+	
+	int totalLines = [self.guideLines count];
+	for (int i = 0; i < totalLines; i++)
+	{
+        GRGuideLine *cLine = (GRGuideLine *)[self.guideLines objectAtIndex:i];
+        
+        if (cLine.needsRedraw == NO)
+            continue;
+        
+        // set the series line color
+        CGContextSetStrokeColorWithColor(cgContext, cLine.lineColor.CGColor);        
+        CGContextSetLineDash(cgContext, 0, nil, 0);
+        
+        CGPoint lineStart = CGPointZero;
+        CGPoint lineEnd = CGPointZero;
+        
+        if (cLine.orientation == GUIDELINE_VERTICAL)
+        {
+            lineStart = CGPointMake(4, chartFrame.origin.y);
+            lineEnd = CGPointMake(4, chartFrame.origin.y + chartFrame.size.height);
+        }
+        
+        if (cLine.orientation == GUIDELINE_HORIZONTAL)
+        {
+            lineStart = CGPointMake(chartFrame.origin.x, [self axisYForValue:cLine.value]);
+            lineEnd = CGPointMake(chartFrame.origin.x + chartFrame.size.width, 10);
+        }
+        
+		CGPoint points[] = {lineStart, lineEnd};
+        CGContextStrokeLineSegments(cgContext, points, 2);
+	}
+    UIGraphicsEndImageContext();
+}
+
+- (void) calcChartArea
 {
 	// if we're rendering labels, adjust the grid frame to make room for them
 	BOOL renderLabels = YES;
@@ -328,11 +405,11 @@
 		NSString *labelString;
 		if (yFormatter != nil)
 		{
-			labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:chartRange.max]];
+			labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:_chartRange.max]];
 		}
 		else
 		{
-			labelString = [[NSNumber numberWithFloat:chartRange.max] stringValue];
+			labelString = [[NSNumber numberWithFloat:_chartRange.max] stringValue];
 		}
 		
 		CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
@@ -362,9 +439,11 @@
 	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
 	int totalPoints = [firstSeries.data count];
 	xPad = (chartFrame.size.width / (totalPoints - 1));
-	yPad = chartFrame.size.height / (chartRange.max - chartRange.min);
+	yPad = chartFrame.size.height / (_chartRange.max - _chartRange.min);
 }
 
+
+// Returns the range of the chart, but also stores the value away into _chartRange
 - (GRRange) getChartRange
 {
 	NSMutableArray *maxValues = [[NSMutableArray alloc] init];
@@ -397,16 +476,21 @@
 	
 	[minValues release];
 	[maxValues release];
+    
+    _chartRange = range;
 	
 	return range;
 }
-
 
 #pragma mark -
 #pragma mark Cleanup
 - (void)dealloc {
 	
 	[_dataProvider release];
+    [guideLines release];
+    [yFormatter release];
+    [xFormatter release];
+    [chartTitle release];
 	
     [super dealloc];
 }

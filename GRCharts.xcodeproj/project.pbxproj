@@ -13,6 +13,7 @@
 		064ADC1F110C2FD200DB05E9 /* LogicTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 064ADC1E110C2FD200DB05E9 /* LogicTests.m */; };
 		064ADC30110C31FD00DB05E9 /* GRLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 065371E8110C254F00B3F85F /* GRLineChart.m */; };
 		065371E9110C254F00B3F85F /* GRLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 065371E8110C254F00B3F85F /* GRLineChart.m */; };
+		06E060F0138EB84000A099FF /* GRGuideLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E060EF138EB84000A099FF /* GRGuideLine.m */; };
 		1D3623260D0F684500981E51 /* GRChartsAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* GRChartsAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -33,6 +34,8 @@
 		064ADD7A110C46CB00DB05E9 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		065371E7110C254F00B3F85F /* GRLineChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRLineChart.h; sourceTree = "<group>"; };
 		065371E8110C254F00B3F85F /* GRLineChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRLineChart.m; sourceTree = "<group>"; };
+		06E060EE138EB84000A099FF /* GRGuideLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRGuideLine.h; sourceTree = "<group>"; };
+		06E060EF138EB84000A099FF /* GRGuideLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRGuideLine.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* GRChartsAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRChartsAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* GRChartsAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRChartsAppDelegate.m; sourceTree = "<group>"; };
@@ -82,6 +85,8 @@
 				065371E8110C254F00B3F85F /* GRLineChart.m */,
 				063141E11115113F00C9EE5E /* GRLineSeries.h */,
 				063141E21115113F00C9EE5E /* GRLineSeries.m */,
+				06E060EE138EB84000A099FF /* GRGuideLine.h */,
+				06E060EF138EB84000A099FF /* GRGuideLine.m */,
 			);
 			path = GRCharts;
 			sourceTree = "<group>";
@@ -264,6 +269,7 @@
 				065371E9110C254F00B3F85F /* GRLineChart.m in Sources */,
 				060C283C110CB05700D6C13F /* GRTestView.m in Sources */,
 				063141E31115113F00C9EE5E /* GRLineSeries.m in Sources */,
+				06E060F0138EB84000A099FF /* GRGuideLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

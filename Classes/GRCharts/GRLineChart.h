@@ -26,13 +26,15 @@
 
 #import <UIKit/UIKit.h>
 #import "GRLineSeries.h"
+#import "GRGuideLine.h"
+
+struct GRRange {
+	float min;
+	float max;
+};
+typedef struct GRRange GRRange;
 
 @interface GRLineChart : UIView {
-	NSArray		*_dataProvider;
-	BOOL		_dataProviderDirty;
-	
-	BOOL	redrawChart;
-	
 	CGRect		chartFrame;
 	
 	float		minGridX;
@@ -48,13 +50,19 @@
 	NSFormatter *xFormatter;
 	
 	NSString	*chartTitle;
+    
+    NSMutableArray  *guideLines;
+    
+@private
+    GRRange _chartRange;
+    BOOL	redrawChart;
+    
+    BOOL    _guidelinesDirty;
+    BOOL    redrawGuides;
+    
+    NSArray	*_dataProvider;
+	BOOL	_dataProviderDirty;
 }
-
-struct GRRange {
-	float min;
-	float max;
-};
-typedef struct GRRange GRRange;
 
 @property (nonatomic, retain) NSArray *dataProvider;
 
@@ -65,6 +73,8 @@ typedef struct GRRange GRRange;
 @property (nonatomic, retain) NSFormatter *xFormatter;
 
 @property (nonatomic, retain) NSString *chartTitle;
+
+@property (nonatomic, retain) NSMutableArray *guideLines;
 
 - (GRRange) getChartRange;
 

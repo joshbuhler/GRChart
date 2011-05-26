@@ -41,8 +41,8 @@
 	NSMutableArray *test1 = [[NSMutableArray alloc] init];
 	for (int i = 0; [test1 count] < numPoints; i++)
 	{
-		[test1 addObject:[NSNumber numberWithFloat:(float)(arc4random() % 10) / (float)((arc4random() % 10) + 1)]];
-//        [test1 addObject:[NSNumber numberWithInt:i]];
+		//[test1 addObject:[NSNumber numberWithFloat:(float)(arc4random() % 10) / (float)((arc4random() % 10) + 1)]];
+        [test1 addObject:[NSNumber numberWithInt:i]];
 		NSLog(@"test1 num: %f", [[test1 objectAtIndex:i] floatValue]);
 	}
     
@@ -53,7 +53,7 @@
 	
 	GRLineSeries *series1 = [[GRLineSeries alloc] initWithData:test1 andColor:[UIColor orangeColor]];
 	
-    /*
+    
 	NSMutableArray *test2 = [[NSMutableArray alloc] init];
 	for (int i = 0; [test2 count] < numPoints; i++)
 	{
@@ -73,7 +73,7 @@
 	series2.yField = @"price";
 	series2.xLabel = @"Date";
 	series2.yLabel = @"Price";
-	*/
+    
 	lineChart.chartTitle = @"Item Price / Time";
 	
 	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
@@ -82,13 +82,30 @@
 	[numberFormatter setMaximumFractionDigits:2];
 	lineChart.yFormatter = numberFormatter;
 	
-	//lineChart.dataProvider = [NSArray arrayWithObjects:series1, series2, nil];
-    lineChart.dataProvider = [NSArray arrayWithObjects:series1, nil];
+	lineChart.dataProvider = [NSArray arrayWithObjects:series1, series2, nil];
 	
 	[test1 release];
-	//[test2 release];
+	[test2 release];
 	[series1 release];
-	//[series2 release];
+	[series2 release];
+    
+    // guidelines
+    redLine = [[[GRGuideLine alloc] init] retain];
+    redLine.value = 5;
+    redLine.lineColor = [UIColor redColor];
+    
+    GRGuideLine *blueLine = [[GRGuideLine alloc] init];
+    blueLine.value = 7;
+    blueLine.lineColor = [UIColor blueColor];
+    
+    NSMutableArray *guides = [[NSMutableArray alloc] init];
+    [guides addObject:redLine];
+    [guides addObject:blueLine];
+    
+    lineChart.guideLines = guides;
+    
+    [blueLine release];
+    [guides release];
 }
 
 
@@ -114,6 +131,9 @@
 
 
 - (void)dealloc {
+    
+    [redLine release];
+    
     [super dealloc];
 }
 
