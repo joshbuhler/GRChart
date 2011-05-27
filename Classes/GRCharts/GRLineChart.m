@@ -126,7 +126,7 @@
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef cgContext = UIGraphicsGetCurrentContext();
-    CGContextClearRect(cgContext, chartFrame);
+    CGContextClearRect(cgContext, self.frame);
     
     chartFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     
@@ -153,8 +153,10 @@
 	CGFloat lineDash[2];
 	lineDash[0] = 5.0f;
 	lineDash[1] = 5.0f;
-	
+	    
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
+    
+    //
 	CGContextBeginPath(cgContext);
 	
 	// Grid Lines
@@ -378,10 +380,10 @@
 	for (int i = 0; i < totalLines; i++)
 	{
         GRGuideLine *cLine = (GRGuideLine *)[self.guideLines objectAtIndex:i];
-        NSLog(@"cLine: %f", cLine.value);
+        //NSLog(@"cLine: %f", cLine.value);
         if (cLine.needsRedraw == NO)
             continue;
-        NSLog(@"alsdkjf");
+        
         // set the series line color
         CGContextSetStrokeColorWithColor(cgContext, cLine.lineColor.CGColor);        
         CGContextSetLineDash(cgContext, 0, nil, 0);
@@ -453,8 +455,8 @@
 	int totalPoints = [firstSeries.data count];
 	xPad = (chartFrame.size.width / (totalPoints - 1));
 	yPad = chartFrame.size.height / (_chartRange.max - _chartRange.min);
-    NSLog(@"pad: %f %f", xPad, yPad);
-    NSLog(@"frame: %f %f, %f %f", chartFrame.origin.x, chartFrame.origin.y, chartFrame.size.width, chartFrame.size.height);
+//    NSLog(@"pad: %f %f", xPad, yPad);
+//    NSLog(@"frame: %f %f, %f %f", chartFrame.origin.x, chartFrame.origin.y, chartFrame.size.width, chartFrame.size.height);
 }
 
 
@@ -494,7 +496,7 @@
     
     _chartRange = range;
 	
-    NSLog(@"range: %f-%f", range.min, range.max);
+//    NSLog(@"range: %f-%f", range.min, range.max);
 	return range;
 }
 
