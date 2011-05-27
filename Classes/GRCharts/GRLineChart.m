@@ -128,6 +128,8 @@
     CGContextRef cgContext = UIGraphicsGetCurrentContext();
     CGContextClearRect(cgContext, chartFrame);
     
+    chartFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    
     [self getChartRange];
     [self calcChartArea];
     
@@ -451,6 +453,8 @@
 	int totalPoints = [firstSeries.data count];
 	xPad = (chartFrame.size.width / (totalPoints - 1));
 	yPad = chartFrame.size.height / (_chartRange.max - _chartRange.min);
+    NSLog(@"pad: %f %f", xPad, yPad);
+    NSLog(@"frame: %f %f, %f %f", chartFrame.origin.x, chartFrame.origin.y, chartFrame.size.width, chartFrame.size.height);
 }
 
 
@@ -490,6 +494,7 @@
     
     _chartRange = range;
 	
+    NSLog(@"range: %f-%f", range.min, range.max);
 	return range;
 }
 
