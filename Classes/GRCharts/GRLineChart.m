@@ -365,6 +365,9 @@
         
         // done w/ the series, reset the xPoint
         currentPoint.x = chartFrame.origin.x;
+        
+        // what type of line are we drawing?
+        CGContextFillPath(cgContext);
 	}
 	
 	UIGraphicsEndImageContext();

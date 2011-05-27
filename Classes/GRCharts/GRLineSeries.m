@@ -33,6 +33,7 @@
 @synthesize lineColor;
 @synthesize xField, yField;
 @synthesize xLabel, yLabel;
+@synthesize lineStyle;
 
 - (id) initWithData:(NSArray *)lineData andColor:(UIColor *)color
 {
@@ -43,6 +44,5 @@
 	
 	return self;
 }
-
 
 @end

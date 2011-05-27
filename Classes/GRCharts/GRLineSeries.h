@@ -36,7 +36,12 @@
 	
 	NSString	*xLabel;
 	NSString	*yLabel;
+    
+    int         lineStyle;
 }
+
+#define LINESTYLE_LINE  0
+#define LINESTYLE_FILL  1
 
 @property	(nonatomic, retain) NSArray *data;
 @property	(nonatomic, retain)	UIColor *lineColor;
@@ -46,6 +51,8 @@
 
 @property	(nonatomic, retain) NSString *xLabel;
 @property	(nonatomic, retain) NSString *yLabel;
+
+@property   (nonatomic) int lineStyle;
 
 - (id) initWithData:(NSArray *)lineData andColor:(UIColor *)color;
 

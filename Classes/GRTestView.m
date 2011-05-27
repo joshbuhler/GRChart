@@ -67,12 +67,14 @@
 		//NSLog(@"test2 num: %f", rndValue);
 		[newObj release];
 	}
+    [test2 replaceObjectAtIndex:9 withObject:[NSNull null]];
 	
 	GRLineSeries *series2 = [[GRLineSeries alloc] initWithData:test2 andColor:[UIColor cyanColor]];
 	series2.xField = @"day";
 	series2.yField = @"price";
 	series2.xLabel = @"Date";
 	series2.yLabel = @"Price";
+    series2.lineStyle = LINESTYLE_FILL;
     
 	lineChart.chartTitle = @"Item Price / Time";
 	
@@ -91,7 +93,7 @@
     
     // guidelines
     redLine = [[[GRGuideLine alloc] init] retain];
-    redLine.value = 5;
+    redLine.value = 0;
     redLine.lineColor = [UIColor redColor];
     
     GRGuideLine *blueLine = [[GRGuideLine alloc] init];
@@ -99,7 +101,7 @@
     blueLine.lineColor = [UIColor blueColor];
     
     GRGuideLine *greenLine = [[GRGuideLine alloc] init];
-    greenLine.value = 4;
+    greenLine.value = 3;
     greenLine.lineColor = [UIColor greenColor];
     greenLine.orientation = GUIDELINE_HORIZONTAL;
     
@@ -115,14 +117,14 @@
     [guides release];
     
     // test animating a guide line - this doesn't work at 
-//    [NSTimer scheduledTimerWithTimeInterval:.25f
-//                                     target:self selector:@selector(onTimer:)
-//                                   userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:.05f
+                                     target:self selector:@selector(onTimer:)
+                                   userInfo:nil repeats:YES];
 }
 
 - (void) onTimer:(NSTimer *)timer
 {
-    redLine.value++;
+    redLine.value += .1;
     [lineChart setNeedsDisplay];
 }
 
