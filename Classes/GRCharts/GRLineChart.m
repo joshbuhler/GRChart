@@ -292,14 +292,20 @@
 	
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
 	CGContextSetLineWidth(cgContext, 1.0f);
-	CGContextBeginPath(cgContext);
 	
+    NSMutableArray *fillPath;
 	int totalLines = [self.dataProvider count];
 	for (int i = 0; i < totalLines; i++)
 	{
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
         
+        if (cSeries.lineStyle == LINESTYLE_FILL)
+        {
+            fillPath = [[NSMutableArray alloc] init];
+        }
+        
         // set the series line color
+        CGContextBeginPath(cgContext);
         CGContextSetStrokeColorWithColor(cgContext, cSeries.lineColor.CGColor);
         
         CGPoint segmentStart = currentPoint;
@@ -360,15 +366,48 @@
                 CGPoint points[] = {segmentStart, segmentEnd};
                 CGContextStrokeLineSegments(cgContext, points, 2);
                 segmentStart = segmentEnd;
+                
+                if (cSeries.lineStyle == LINESTYLE_FILL)
+                    [fillPath addObject:[NSValue valueWithCGPoint:segmentEnd]];
             }
 		}
         
         // done w/ the series, reset the xPoint
         currentPoint.x = chartFrame.origin.x;
         
-        // what type of line are we drawing?
-        CGContextFillPath(cgContext);
+        // do we need to fill the path?
+        if (cSeries.lineStyle == LINESTYLE_FILL)
+        {
+            /*
+            CGContextAddLineToPoint(cgContext, 150, 100);
+            CGContextMoveToPoint(cgContext, 100, 100);
+            CGContextAddLineToPoint(cgContext, 200, 100);
+            CGContextAddLineToPoint(cgContext, 150, 200);
+            /*/
+            CGContextMoveToPoint(cgContext, chartFrame.origin.x, baseline);
+            
+            // now trace the line, and then fill it
+            for (int i = 0; i < [fillPath count]; i++)
+            {
+                NSValue *pVal = [fillPath objectAtIndex:i];
+                CGPoint cPoint = [pVal CGPointValue];
+                CGContextAddLineToPoint(cgContext, cPoint.x, cPoint.y);
+            }
+            
+            CGContextAddLineToPoint(cgContext, chartFrame.origin.x + chartFrame.size.width, baseline);
+            CGContextClosePath(cgContext);
+            CGContextDrawPath(cgContext, kCGPathFill);
+            //*/
+            
+            // cleanup, cleanup...
+            [fillPath release];            
+        }
+        
+//        CGContextDrawPath(cgContext, kCGPathFill);
 	}
+    
+    
+    
 	
 	UIGraphicsEndImageContext();
 }
