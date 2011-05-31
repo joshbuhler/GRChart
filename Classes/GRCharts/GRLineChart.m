@@ -302,6 +302,9 @@
         if (cSeries.lineStyle == LINESTYLE_FILL)
         {
             fillPath = [[NSMutableArray alloc] init];
+            
+            UIColor *fillColor = (cSeries.fillColor != nil) ? cSeries.fillColor : cSeries.lineColor;
+            CGContextSetFillColorWithColor(cgContext, fillColor.CGColor);            
         }
         
         // set the series line color
@@ -378,12 +381,6 @@
         // do we need to fill the path?
         if (cSeries.lineStyle == LINESTYLE_FILL)
         {
-            /*
-            CGContextAddLineToPoint(cgContext, 150, 100);
-            CGContextMoveToPoint(cgContext, 100, 100);
-            CGContextAddLineToPoint(cgContext, 200, 100);
-            CGContextAddLineToPoint(cgContext, 150, 200);
-            /*/
             CGContextMoveToPoint(cgContext, chartFrame.origin.x, baseline);
             
             // now trace the line, and then fill it
@@ -397,17 +394,11 @@
             CGContextAddLineToPoint(cgContext, chartFrame.origin.x + chartFrame.size.width, baseline);
             CGContextClosePath(cgContext);
             CGContextDrawPath(cgContext, kCGPathFill);
-            //*/
             
             // cleanup, cleanup...
             [fillPath release];            
         }
-        
-//        CGContextDrawPath(cgContext, kCGPathFill);
 	}
-    
-    
-    
 	
 	UIGraphicsEndImageContext();
 }

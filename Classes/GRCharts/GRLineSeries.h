@@ -30,6 +30,7 @@
 @interface GRLineSeries : NSObject {
 	NSArray		*data;
 	UIColor		*lineColor;
+    UIColor     *fillColor;
 	
 	NSString	*xField;
 	NSString	*yField;
@@ -45,6 +46,7 @@
 
 @property	(nonatomic, retain) NSArray *data;
 @property	(nonatomic, retain)	UIColor *lineColor;
+@property	(nonatomic, retain)	UIColor *fillColor;
 
 @property	(nonatomic, retain) NSString *xField;
 @property	(nonatomic, retain) NSString *yField;

@@ -75,6 +75,7 @@
 	series2.xLabel = @"Date";
 	series2.yLabel = @"Price";
     series2.lineStyle = LINESTYLE_FILL;
+    series2.fillColor = [UIColor lightGrayColor];
     
 	lineChart.chartTitle = @"Item Price / Time";
 	

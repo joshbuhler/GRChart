@@ -31,6 +31,7 @@
 
 @synthesize data;
 @synthesize lineColor;
+@synthesize fillColor;
 @synthesize xField, yField;
 @synthesize xLabel, yLabel;
 @synthesize lineStyle;
