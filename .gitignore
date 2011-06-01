@@ -11,3 +11,8 @@
 
 # build products
 build/
+GRCharts.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+GRCharts.xcodeproj/project.xcworkspace/xcuserdata/jbuhler.xcuserdatad/UserInterfaceState.xcuserstate
+GRCharts.xcodeproj/xcuserdata/jbuhler.xcuserdatad/xcschemes/GRCharts.xcscheme
+GRCharts.xcodeproj/xcuserdata/jbuhler.xcuserdatad/xcschemes/LogicTests.xcscheme
+GRCharts.xcodeproj/xcuserdata/jbuhler.xcuserdatad/xcschemes/xcschememanagement.plist
