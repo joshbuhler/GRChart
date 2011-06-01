@@ -130,6 +130,10 @@
     
     chartFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     
+    // no need to continue if there isn't any data
+    if (_dataProvider == nil)
+        return;
+    
     [self getChartRange];
     [self calcChartArea];
     
