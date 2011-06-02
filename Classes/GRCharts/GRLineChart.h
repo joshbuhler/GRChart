@@ -34,6 +34,14 @@ struct GRRange {
 };
 typedef struct GRRange GRRange;
 
+static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
+{
+    GRRange r;
+    r.min = min;
+    r.max = max;
+    return r;
+}
+
 @interface GRLineChart : UIView {
 	CGRect		chartFrame;
 	
@@ -53,6 +61,8 @@ typedef struct GRRange GRRange;
     
     NSMutableArray  *guideLines;
     
+    GRRange     overrideRange;
+    
 @private
     GRRange _chartRange;
     BOOL	redrawChart;
@@ -68,6 +78,8 @@ typedef struct GRRange GRRange;
 
 @property (nonatomic) float minGridX;
 @property (nonatomic) float minGridY;
+
+@property (nonatomic) GRRange overrideRange;
 
 @property (nonatomic, retain) NSFormatter *yFormatter;
 @property (nonatomic, retain) NSFormatter *xFormatter;

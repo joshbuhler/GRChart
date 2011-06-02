@@ -85,12 +85,14 @@
 	[numberFormatter setMaximumFractionDigits:2];
 	lineChart.yFormatter = numberFormatter;
 	
-	lineChart.dataProvider = [NSArray arrayWithObjects:series1, series2, nil];
+	lineChart.dataProvider = [NSArray arrayWithObjects:series2, nil];
 	
 	[test1 release];
 	[test2 release];
 	[series1 release];
 	[series2 release];
+    
+    lineChart.overrideRange = GRRangeMake(-5, 10);
     
     // guidelines
     redLine = [[[GRGuideLine alloc] init] retain];

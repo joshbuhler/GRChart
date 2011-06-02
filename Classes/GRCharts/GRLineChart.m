@@ -47,6 +47,7 @@
 @synthesize yFormatter, xFormatter;
 @synthesize chartTitle;
 @synthesize guideLines;
+@synthesize overrideRange;
 
 #pragma mark -
 #pragma mark Initialization
@@ -541,9 +542,17 @@
 	[minValues release];
 	[maxValues release];
     
+    // if the override range values aren't zero, then use those, provided that they're outside
+    // the actual data range
+    if (overrideRange.max != 0 || overrideRange.min != 0)
+    {
+        range.min = MIN(overrideRange.min, range.min);
+        range.max = MAX(overrideRange.max, range.max);
+    }
+    
     _chartRange = range;
 	
-//    NSLog(@"range: %f-%f", range.min, range.max);
+    NSLog(@"range: %f-%f", range.min, range.max);
 	return range;
 }
 
