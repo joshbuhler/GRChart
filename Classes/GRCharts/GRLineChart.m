@@ -73,6 +73,7 @@
 
 - (void) initVars
 {
+    NSLog(@"initVars");
 	_dataProviderDirty = NO;
     _guidelinesDirty = NO;
     
@@ -127,6 +128,9 @@
         redrawGuides = YES;
         _guidelinesDirty = NO;
     }
+    
+    if (redrawChart || redrawGuides)
+        [self setNeedsDisplay];
 }
 
 #pragma mark -
