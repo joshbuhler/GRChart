@@ -573,7 +573,7 @@
     
     _chartRange = range;
 	
-    NSLog(@"range: %f-%f", range.min, range.max);
+//    NSLog(@"chart range: %f-%f", range.min, range.max);
 	return range;
 }
 
