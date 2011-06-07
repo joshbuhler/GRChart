@@ -94,6 +94,9 @@
     
     lineChart.overrideRange = GRRangeMake(-5, 10);
     
+    lineChart.xGridColor = [UIColor redColor];
+    lineChart.yGridColor = [UIColor yellowColor];
+    
     // guidelines
     redLine = [[[GRGuideLine alloc] init] retain];
     redLine.value = 0;

@@ -48,6 +48,7 @@
 @synthesize chartTitle;
 @synthesize guideLines;
 @synthesize overrideRange;
+@synthesize xGridColor, yGridColor;
 
 #pragma mark -
 #pragma mark Initialization
@@ -87,6 +88,9 @@
 	
 	labelXPad = 5;
 	labelYPad = 5;
+    
+    self.xGridColor = [UIColor whiteColor];
+    self.yGridColor = [UIColor whiteColor];
 }
 
 #pragma mark -
@@ -181,8 +185,7 @@
 	// Grid Lines
 	CGContextSetLineDash(cgContext, 0.0f, lineDash, 2);
 	CGContextSetLineWidth(cgContext, 0.3f);
-	UIColor *gridColor = [UIColor whiteColor];
-	[gridColor set];
+	UIColor *gridColor = xGridColor;
 	
 	// determine the grid spacing
 	float gridSpaceX = xPad * ceil(minGridX / xPad);
@@ -219,8 +222,10 @@
 		
 		xPos += gridSpaceX;
 	}
+    CGContextStrokePath(cgContext);
 
 	// Y-Axis lines
+    gridColor = yGridColor;
 	xPos = chartFrame.origin.x;
 	yPos = chartFrame.origin.y + chartFrame.size.height;
 	for (int y = 0; y < yLines; y++)

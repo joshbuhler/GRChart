@@ -63,6 +63,9 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
     
     GRRange     overrideRange;
     
+    UIColor    *xGridColor;
+    UIColor    *yGridColor;
+    
 @private
     GRRange _chartRange;
     BOOL	redrawChart;
@@ -78,6 +81,9 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 
 @property (nonatomic) float minGridX;
 @property (nonatomic) float minGridY;
+
+@property (nonatomic, retain) UIColor *xGridColor;
+@property (nonatomic, retain) UIColor *yGridColor;
 
 @property (nonatomic) GRRange overrideRange;
 
