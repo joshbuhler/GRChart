@@ -50,6 +50,7 @@
 @synthesize overrideRange;
 @synthesize xGridColor, yGridColor;
 @synthesize drawXLabels, drawYLabels;
+@synthesize dashedGridLines;
 
 #pragma mark -
 #pragma mark Initialization
@@ -173,17 +174,20 @@
 
 - (void) renderGrid
 {
-	CGFloat lineDash[2];
-	lineDash[0] = 5.0f;
-	lineDash[1] = 5.0f;
-	    
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
     
     //
 	CGContextBeginPath(cgContext);
 	
 	// Grid Lines
-	CGContextSetLineDash(cgContext, 0.0f, lineDash, 2);
+    
+    if (dashedGridLines)
+    {
+        CGFloat lineDash[2];
+        lineDash[0] = 5.0f;
+        lineDash[1] = 5.0f;
+        CGContextSetLineDash(cgContext, 0.0f, lineDash, 2);
+    }
 	CGContextSetLineWidth(cgContext, 0.3f);
 	UIColor *gridColor = xGridColor;
 	

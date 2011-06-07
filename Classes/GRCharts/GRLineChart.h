@@ -69,6 +69,8 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
     UIColor    *xGridColor;
     UIColor    *yGridColor;
     
+    BOOL        dashedGridLines;
+    
 @private
     GRRange _chartRange;
     BOOL	redrawChart;
@@ -87,6 +89,8 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 
 @property (nonatomic) BOOL drawXLabels;
 @property (nonatomic) BOOL drawYLabels;
+
+@property (nonatomic) BOOL dashedGridLines;
 
 @property (nonatomic, retain) UIColor *xGridColor;
 @property (nonatomic, retain) UIColor *yGridColor;
