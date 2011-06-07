@@ -53,6 +53,9 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 	
 	float		labelXPad;
 	float		labelYPad;
+    
+    BOOL        drawXLabels;
+    BOOL        drawYLabels;
 	
 	NSFormatter	*yFormatter;
 	NSFormatter *xFormatter;
@@ -81,6 +84,9 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 
 @property (nonatomic) float minGridX;
 @property (nonatomic) float minGridY;
+
+@property (nonatomic) BOOL drawXLabels;
+@property (nonatomic) BOOL drawYLabels;
 
 @property (nonatomic, retain) UIColor *xGridColor;
 @property (nonatomic, retain) UIColor *yGridColor;

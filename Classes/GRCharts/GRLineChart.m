@@ -49,6 +49,7 @@
 @synthesize guideLines;
 @synthesize overrideRange;
 @synthesize xGridColor, yGridColor;
+@synthesize drawXLabels, drawYLabels;
 
 #pragma mark -
 #pragma mark Initialization
@@ -74,7 +75,6 @@
 
 - (void) initVars
 {
-    NSLog(@"initVars");
 	_dataProviderDirty = NO;
     _guidelinesDirty = NO;
     
@@ -205,20 +205,23 @@
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		
 		// draw the label - if it will overlap, then don't draw it
-		NSString *xLabelTxt = @"xLabel";
-		CGSize labelSize = [xLabelTxt sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
-		[gridColor set];
-		
-		float labelX = xPos - (labelSize.width / 2);
-		
-		CGRect cLabelRect = CGRectMake(labelX, (yPos + labelYPad), labelSize.width, labelSize.height);
-		
-		if (!CGRectIntersectsRect(lastLabelRect, cLabelRect))
-		{
-			[xLabelTxt drawInRect:cLabelRect
-						 withFont:[UIFont fontWithName:@"Arial" size:10]];
-			lastLabelRect = cLabelRect;
-		}
+        if (drawXLabels)
+        {
+            NSString *xLabelTxt = @"xLabel";
+            CGSize labelSize = [xLabelTxt sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+            [gridColor set];
+            
+            float labelX = xPos - (labelSize.width / 2);
+            
+            CGRect cLabelRect = CGRectMake(labelX, (yPos + labelYPad), labelSize.width, labelSize.height);
+            
+            if (!CGRectIntersectsRect(lastLabelRect, cLabelRect))
+            {
+                [xLabelTxt drawInRect:cLabelRect
+                             withFont:[UIFont fontWithName:@"Arial" size:10]];
+                lastLabelRect = cLabelRect;
+            }
+        }
 		
 		xPos += gridSpaceX;
 	}
@@ -233,8 +236,7 @@
 		CGContextMoveToPoint(cgContext, xPos, yPos);
 		CGContextAddLineToPoint(cgContext, xPos + chartFrame.size.width, yPos);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
-		BOOL renderLabels = YES;
-		if (renderLabels)
+		if (drawYLabels)
 		{
 			float yValue = ((float)y / (float)yLines) * (_chartRange.max - _chartRange.min);
 			

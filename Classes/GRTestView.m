@@ -77,7 +77,9 @@
     series2.lineStyle = LINESTYLE_FILL;
     series2.fillColor = [UIColor lightGrayColor];
     
-	lineChart.chartTitle = @"Item Price / Time";
+	//lineChart.chartTitle = @"Item Price / Time";
+    lineChart.drawXLabels = NO;
+    lineChart.drawYLabels = NO;
 	
 	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
 	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
@@ -95,7 +97,7 @@
     lineChart.overrideRange = GRRangeMake(-5, 10);
     
     lineChart.xGridColor = [UIColor redColor];
-    lineChart.yGridColor = [UIColor yellowColor];
+    lineChart.yGridColor = [UIColor orangeColor];
     
     // guidelines
     redLine = [[[GRGuideLine alloc] init] retain];
