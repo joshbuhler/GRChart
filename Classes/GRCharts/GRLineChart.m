@@ -474,25 +474,27 @@
 - (void) calcChartArea
 {
 	// if we're rendering labels, adjust the grid frame to make room for them
-	BOOL renderLabels = YES;
-	if (renderLabels)
-	{
-		NSString *labelString;
-		if (yFormatter != nil)
-		{
-			labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:_chartRange.max]];
-		}
-		else
-		{
-			labelString = [[NSNumber numberWithFloat:_chartRange.max] stringValue];
-		}
-		
-		CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
-		chartFrame.origin.x += (labelSize.width + labelXPad);
-		chartFrame.size.width -= (labelSize.width + labelXPad);
-		
-		chartFrame.size.height -= (labelSize.height + labelYPad);
-	}
+	NSString *labelString;
+    if (yFormatter != nil)
+    {
+        labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:_chartRange.max]];
+    }
+    else
+    {
+        labelString = [[NSNumber numberWithFloat:_chartRange.max] stringValue];
+    }
+    
+    CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+    
+    if (drawYLabels)
+    {
+        chartFrame.origin.x += (labelSize.width + labelXPad);
+        chartFrame.size.width -= (labelSize.width + labelXPad);
+    }
+    
+    if (drawXLabels)
+        chartFrame.size.height -= (labelSize.height + labelYPad);
+    
 	
 	// if there's a title, adjust the grid for that
 	if (chartTitle != nil)
