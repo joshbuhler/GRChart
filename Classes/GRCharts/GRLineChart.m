@@ -302,9 +302,6 @@
 
 - (void) renderData
 {	
-	GRLineSeries *firstSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:0];
-	int totalPoints = [firstSeries.data count];
-	
 	// baseline is the bottom line of the chart
 	float baseline = chartFrame.origin.y + chartFrame.size.height;
 	CGPoint currentPoint = CGPointMake(chartFrame.origin.x, baseline);
@@ -317,6 +314,9 @@
 	for (int i = 0; i < totalLines; i++)
 	{
 		GRLineSeries *cSeries = (GRLineSeries *)[self.dataProvider objectAtIndex:i];
+        
+        if ([cSeries.data count] <= 0)
+            continue;
         
         if (cSeries.lineStyle == LINESTYLE_FILL)
         {
@@ -333,6 +333,7 @@
         CGPoint segmentStart = currentPoint;
         CGPoint segmentEnd = currentPoint;
         
+        int totalPoints = [cSeries.data count];
 		for (int k = 0; k < totalPoints; k++)
 		{	
 			NSObject *cObj = [cSeries.data objectAtIndex:k];
@@ -526,6 +527,9 @@
         // filter any null values out of the series before searching for the min/max
         NSMutableArray *tmpSeries = [NSMutableArray arrayWithArray:cSeries.data];
         [tmpSeries removeObjectIdenticalTo:[NSNull null]];
+        
+        if ([tmpSeries count] <= 0)
+            continue;
 
 		if (cSeries.yField != nil)
 		{
@@ -548,11 +552,11 @@
     
     // if the override range values aren't zero, then use those, provided that they're outside
     // the actual data range
-    if (overrideRange.max != 0 || overrideRange.min != 0)
-    {
+    if (overrideRange.min != 0)
         range.min = MIN(overrideRange.min, range.min);
+    
+    if (overrideRange.max != 0)
         range.max = MAX(overrideRange.max, range.max);
-    }
     
     _chartRange = range;
 	
