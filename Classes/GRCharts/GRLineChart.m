@@ -415,14 +415,16 @@
             CGContextMoveToPoint(cgContext, chartFrame.origin.x, baseline);
             
             // now trace the line, and then fill it
+            float lastXPoint = chartFrame.origin.x;
             for (int i = 0; i < [fillPath count]; i++)
             {
                 NSValue *pVal = [fillPath objectAtIndex:i];
                 CGPoint cPoint = [pVal CGPointValue];
                 CGContextAddLineToPoint(cgContext, cPoint.x, cPoint.y);
+                lastXPoint = cPoint.x;
             }
             
-            CGContextAddLineToPoint(cgContext, chartFrame.origin.x + chartFrame.size.width, baseline);
+            CGContextAddLineToPoint(cgContext, lastXPoint, baseline);
             CGContextClosePath(cgContext);
             CGContextDrawPath(cgContext, kCGPathFill);
             
