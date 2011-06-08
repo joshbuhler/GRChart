@@ -50,6 +50,7 @@
 @synthesize overrideRange;
 @synthesize xGridColor, yGridColor;
 @synthesize drawXLabels, drawYLabels;
+@synthesize yLabelOffset;
 @synthesize dashedGridLines;
 
 #pragma mark -
@@ -273,7 +274,7 @@
 			
 			float labelY = (y == 0) ? yPos - labelSize.height : yPos - (labelSize.height / 2);
 			
-			[labelString drawInRect:CGRectMake(0, labelY, labelSize.width, labelSize.height)
+			[labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
 						   withFont:[UIFont fontWithName:@"Arial" size:10]];
 			
 			// draw the top label
@@ -290,7 +291,7 @@
 				
 				labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
 				labelY = (chartTitle != nil) ? chartFrame.origin.y - (labelSize.height / 2) : chartFrame.origin.y;
-				[labelString drawInRect:CGRectMake(0, labelY, labelSize.width, labelSize.height)
+				[labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
 							   withFont:[UIFont fontWithName:@"Arial" size:10]];
 			}
 		}
@@ -502,7 +503,7 @@
     
     CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
     
-    if (drawYLabels)
+    if (drawYLabels && yLabelOffset >= 0)
     {
         chartFrame.origin.x += (labelSize.width + labelXPad);
         chartFrame.size.width -= (labelSize.width + labelXPad);

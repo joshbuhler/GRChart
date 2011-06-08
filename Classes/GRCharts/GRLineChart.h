@@ -71,6 +71,8 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
     
     BOOL        dashedGridLines;
     
+    float       yLabelOffset;
+    
 @private
     GRRange _chartRange;
     BOOL	redrawChart;
@@ -89,6 +91,8 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 
 @property (nonatomic) BOOL drawXLabels;
 @property (nonatomic) BOOL drawYLabels;
+
+@property (nonatomic) float yLabelOffset;
 
 @property (nonatomic) BOOL dashedGridLines;
 
