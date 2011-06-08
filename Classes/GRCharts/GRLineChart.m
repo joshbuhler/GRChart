@@ -52,6 +52,7 @@
 @synthesize drawXLabels, drawYLabels;
 @synthesize yLabelOffset;
 @synthesize dashedGridLines;
+@synthesize labelFont;
 
 #pragma mark -
 #pragma mark Initialization
@@ -227,7 +228,7 @@
         if (drawXLabels)
         {
             NSString *xLabelTxt = @"xLabel";
-            CGSize labelSize = [xLabelTxt sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+            CGSize labelSize = [xLabelTxt sizeWithFont:labelFont];
             [gridColor set];
             
             float labelX = xPos - (labelSize.width / 2);
@@ -237,7 +238,7 @@
             if (!CGRectIntersectsRect(lastLabelRect, cLabelRect))
             {
                 [xLabelTxt drawInRect:cLabelRect
-                             withFont:[UIFont fontWithName:@"Arial" size:10]];
+                             withFont:labelFont];
                 lastLabelRect = cLabelRect;
             }
         }
@@ -245,6 +246,10 @@
 		xPos += gridSpaceX;
 	}
     CGContextStrokePath(cgContext);
+    
+    // what font are we using?
+    if (labelFont == nil)
+        self.labelFont = [UIFont fontWithName:@"Arial" size:10];
 
 	// Y-Axis lines
     gridColor = yGridColor;
@@ -273,13 +278,13 @@
 				labelString = [[NSNumber numberWithFloat:yValue] stringValue];
 			}
 
-			CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+			CGSize labelSize = [labelString sizeWithFont:labelFont];
 			[gridColor set];
 			
 			float labelY = (y == 0) ? yPos - labelSize.height : yPos - (labelSize.height / 2);
 			
 			[labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
-						   withFont:[UIFont fontWithName:@"Arial" size:10]];
+						   withFont:labelFont];
 			
 			// draw the top label
 			if (y == (yLines - 1))
@@ -293,10 +298,10 @@
 					labelString = [[NSNumber numberWithFloat:_chartRange.max] stringValue];
 				}
 				
-				labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+				labelSize = [labelString sizeWithFont:labelFont];
 				labelY = (chartTitle != nil) ? chartFrame.origin.y - (labelSize.height / 2) : chartFrame.origin.y;
 				[labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
-							   withFont:[UIFont fontWithName:@"Arial" size:10]];
+							   withFont:labelFont];
 			}
 		}
 		
@@ -505,7 +510,10 @@
         labelString = [[NSNumber numberWithFloat:_chartRange.max] stringValue];
     }
     
-    CGSize labelSize = [labelString sizeWithFont:[UIFont fontWithName:@"Arial" size:10]];
+    if (labelFont == nil)
+        self.labelFont = [UIFont fontWithName:@"Arial" size:10];
+    
+    CGSize labelSize = [labelString sizeWithFont:labelFont];
     
     if (drawYLabels && yLabelOffset >= 0)
     {

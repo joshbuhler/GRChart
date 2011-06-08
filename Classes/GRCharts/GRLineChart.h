@@ -73,6 +73,8 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
     
     float       yLabelOffset;
     
+    UIFont      *labelFont;
+    
 @private
     GRRange _chartRange;
     BOOL	redrawChart;
@@ -91,6 +93,8 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 
 @property (nonatomic) BOOL drawXLabels;
 @property (nonatomic) BOOL drawYLabels;
+
+@property (nonatomic, retain) UIFont *labelFont;
 
 @property (nonatomic) float yLabelOffset;
 
