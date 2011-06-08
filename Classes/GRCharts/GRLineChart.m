@@ -160,8 +160,8 @@
 //    // Drawing code
 //	if (redrawChart)
 //    {
-        [self renderGrid];
         [self renderData];
+        [self renderGrid];
         redrawChart = NO;
 //    }
 //    
@@ -170,6 +170,16 @@
         [self renderGuides];
         redrawGuides = NO;
 //    }
+    
+    // draw the frame around the chart
+    CGContextSetShadowWithColor(cgContext, CGSizeMake(3, 3), 4.0f, [UIColor blackColor].CGColor); // using this version to better control the alpha of the shadow
+    CGContextBeginPath(cgContext);
+    CGContextSetLineDash(cgContext, 0, nil, 0);
+    UIColor *frameColor = [UIColor colorWithRed:.61f green:.61f blue:.61f alpha:1.0f];
+    CGContextSetStrokeColorWithColor(cgContext, frameColor.CGColor);
+    CGContextSetLineWidth(cgContext, 3.0f);
+    
+    CGContextStrokeRect(cgContext, chartFrame);
 }
 
 - (void) renderGrid
