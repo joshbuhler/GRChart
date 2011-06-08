@@ -187,6 +187,10 @@
 {
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
     
+    // draw in the background
+    CGContextSetFillColorWithColor(cgContext, [UIColor colorWithRed:0.15f green:0.15f blue:0.15f alpha:1.0f].CGColor);
+    CGContextFillRect(cgContext, chartFrame);
+    
     //
 	CGContextBeginPath(cgContext);
 	
@@ -208,7 +212,7 @@
 	
 	int xLines = ceil(chartFrame.size.width / gridSpaceX);
 	int yLines = ceil(chartFrame.size.height / gridSpaceY);
-	
+    	
 	// X-axis grid lines
 	float xPos = chartFrame.origin.x;
 	float yPos = chartFrame.origin.y + chartFrame.size.height;
@@ -506,7 +510,7 @@
     if (drawYLabels && yLabelOffset >= 0)
     {
         chartFrame.origin.x += (labelSize.width + labelXPad);
-        chartFrame.size.width -= (labelSize.width + labelXPad);
+        chartFrame.size.width -= (labelSize.width + labelXPad);     
     }
     
     if (drawXLabels)
