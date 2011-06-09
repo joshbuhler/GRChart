@@ -158,8 +158,11 @@
     
     [self getChartRange];
     [self calcChartArea];
+
+    // draw in the background
+    CGContextSetFillColorWithColor(cgContext, [UIColor colorWithRed:0.15f green:0.15f blue:0.15f alpha:1.0f].CGColor);
+    CGContextFillRect(cgContext, chartFrame);
     
-//    // Drawing code
 //	if (redrawChart)
 //    {
         [self renderData];
@@ -187,10 +190,6 @@
 - (void) renderGrid
 {
 	CGContextRef cgContext = UIGraphicsGetCurrentContext();
-    
-    // draw in the background
-    CGContextSetFillColorWithColor(cgContext, [UIColor colorWithRed:0.15f green:0.15f blue:0.15f alpha:1.0f].CGColor);
-    CGContextFillRect(cgContext, chartFrame);
     
     //
 	CGContextBeginPath(cgContext);
