@@ -37,12 +37,13 @@
 	[self.view addSubview:lineChart];
 	
 	int numPoints = 15;
-	
+	int cPoint = -3;
 	NSMutableArray *test1 = [[NSMutableArray alloc] init];
-	for (int i = 0; [test1 count] < numPoints; i++)
+	for (int i = 0; cPoint <= 15; i++)
 	{
-		//[test1 addObject:[NSNumber numberWithFloat:(float)(arc4random() % 10) / (float)((arc4random() % 10) + 1)]];
-        [test1 addObject:[NSNumber numberWithInt:i]];
+//		[test1 addObject:[NSNumber numberWithFloat:(float)(arc4random() % 15) / (float)((arc4random() % 15) + 1)]];
+        [test1 addObject:[NSNumber numberWithInt:cPoint]];
+        cPoint++;
 		NSLog(@"test1 num: %f", [[test1 objectAtIndex:i] floatValue]);
 	}
     
@@ -79,7 +80,7 @@
     
 	//lineChart.chartTitle = @"Item Price / Time";
     lineChart.drawXLabels = NO;
-    lineChart.drawYLabels = NO;
+    lineChart.drawYLabels = YES;
 	
 	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
 	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
@@ -87,14 +88,14 @@
 	[numberFormatter setMaximumFractionDigits:2];
 	lineChart.yFormatter = numberFormatter;
 	
-	lineChart.dataProvider = [NSArray arrayWithObjects:series2, nil];
+	lineChart.dataProvider = [NSArray arrayWithObjects:series1, nil];
 	
 	[test1 release];
 	[test2 release];
 	[series1 release];
 	[series2 release];
     
-    lineChart.overrideRange = GRRangeMake(-5, 10);
+    lineChart.overrideRange = GRRangeMake(-3, 10);
     
     lineChart.xGridColor = [UIColor redColor];
     lineChart.yGridColor = [UIColor orangeColor];
@@ -124,10 +125,12 @@
     [greenLine release];
     [guides release];
     
-    // test animating a guide line - this doesn't work at 
+    // test animating a guide line
+    /*
     [NSTimer scheduledTimerWithTimeInterval:.05f
                                      target:self selector:@selector(onTimer:)
                                    userInfo:nil repeats:YES];
+     */
 }
 
 - (void) onTimer:(NSTimer *)timer

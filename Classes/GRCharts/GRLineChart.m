@@ -261,11 +261,10 @@
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
 		if (drawYLabels)
 		{
-			float yValue = ((float)y / (float)yLines) * (_chartRange.max - _chartRange.min);
+            float yValue = _chartRange.min + ((float)y / (float)yLines) * (_chartRange.max - _chartRange.min);
 			
 			if (y == 0)
 				yValue = _chartRange.min;
-			//NSLog(@"yValue: %f", yValue);
 			
 			NSString *labelString;
 			if (yFormatter != nil)
@@ -465,7 +464,6 @@
 	for (int i = 0; i < totalLines; i++)
 	{
         GRGuideLine *cLine = (GRGuideLine *)[self.guideLines objectAtIndex:i];
-        //NSLog(@"cLine: %f", cLine.value);
         if (cLine.needsRedraw == NO)
             continue;
         
@@ -545,7 +543,6 @@
 	int totalPoints = [firstSeries.data count];
 	xPad = (chartFrame.size.width / (totalPoints - 1));
 	yPad = chartFrame.size.height / (_chartRange.max - _chartRange.min);
-//    NSLog(@"pad: %f %f", xPad, yPad);
 //    NSLog(@"frame: %f %f, %f %f", chartFrame.origin.x, chartFrame.origin.y, chartFrame.size.width, chartFrame.size.height);
 }
 
