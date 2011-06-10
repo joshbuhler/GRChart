@@ -254,7 +254,7 @@
     gridColor = yGridColor;
 	xPos = chartFrame.origin.x;
 	yPos = chartFrame.origin.y + chartFrame.size.height;
-	for (int y = 0; y < yLines; y++)
+	for (int y = 0; y <= yLines; y++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
 		CGContextAddLineToPoint(cgContext, xPos + chartFrame.size.width, yPos);
@@ -279,11 +279,13 @@
 			CGSize labelSize = [labelString sizeWithFont:labelFont];
 			[gridColor set];
 			
-			float labelY = (y == 0) ? yPos - labelSize.height : yPos - (labelSize.height / 2);
+			//float labelY = (y == 0) ? yPos - labelSize.height : yPos - (labelSize.height / 2);
+            float labelY = yPos - (labelSize.height / 2);
 			
 			[labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
 						   withFont:labelFont];
 			
+            /*
 			// draw the top label
 			if (y == (yLines - 1))
 			{
@@ -297,10 +299,11 @@
 				}
 				
 				labelSize = [labelString sizeWithFont:labelFont];
-				labelY = (chartTitle != nil) ? chartFrame.origin.y - (labelSize.height / 2) : chartFrame.origin.y;
-				[labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
+				//labelY = (chartTitle != nil) ? chartFrame.origin.y - (labelSize.height / 2) : chartFrame.origin.y;
+                [labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
 							   withFont:labelFont];
 			}
+            */
 		}
 		
 		yPos -= gridSpaceY;
@@ -515,7 +518,12 @@
     if (drawYLabels && yLabelOffset >= 0)
     {
         chartFrame.origin.x += (labelSize.width + labelXPad);
-        chartFrame.size.width -= (labelSize.width + labelXPad);     
+        chartFrame.size.width -= (labelSize.width + labelXPad);
+        
+        // compress the height of the chart a bit so that the top and 
+        // bottom labels can be centered on the top/bottom of the chart
+        chartFrame.origin.y += (labelSize.height / 2);
+        chartFrame.size.height -= labelSize.height;
     }
     
     if (drawXLabels)
