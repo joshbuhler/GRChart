@@ -254,6 +254,7 @@
     gridColor = yGridColor;
 	xPos = chartFrame.origin.x;
 	yPos = chartFrame.origin.y + chartFrame.size.height;
+    float labelXPos = 0 + yLabelOffset;
 	for (int y = 0; y <= yLines; y++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
@@ -279,31 +280,12 @@
 			CGSize labelSize = [labelString sizeWithFont:labelFont];
 			[gridColor set];
 			
-			//float labelY = (y == 0) ? yPos - labelSize.height : yPos - (labelSize.height / 2);
-            float labelY = yPos - (labelSize.height / 2);
+            float labelY = yPos - (labelSize.height * 0.5f);
+            
+            float labelX = (labelXPos + (chartFrame.origin.x * 0.5f)) - (labelSize.width * 0.5f);
 			
-			[labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
+			[labelString drawInRect:CGRectMake(labelX, labelY, labelSize.width, labelSize.height)
 						   withFont:labelFont];
-			
-            /*
-			// draw the top label
-			if (y == (yLines - 1))
-			{
-				if (yFormatter != nil)
-				{
-					labelString = [yFormatter stringForObjectValue:[NSNumber numberWithFloat:_chartRange.max]];
-				}
-				else
-				{
-					labelString = [[NSNumber numberWithFloat:_chartRange.max] stringValue];
-				}
-				
-				labelSize = [labelString sizeWithFont:labelFont];
-				//labelY = (chartTitle != nil) ? chartFrame.origin.y - (labelSize.height / 2) : chartFrame.origin.y;
-                [labelString drawInRect:CGRectMake(0 + yLabelOffset, labelY, labelSize.width, labelSize.height)
-							   withFont:labelFont];
-			}
-            */
 		}
 		
 		yPos -= gridSpaceY;
