@@ -86,8 +86,8 @@
 	
 	chartFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
 	
-	minGridX = 25;
-	minGridY = 25;
+	minGridX = 20;
+	minGridY = 30;
 	
 	labelXPad = 5;
 	labelYPad = 5;
@@ -212,6 +212,7 @@
 	
 	int xLines = ceil(chartFrame.size.width / gridSpaceX);
 	int yLines = ceil(chartFrame.size.height / gridSpaceY);
+    //NSLog(@"self: %@ yLines: %d", self, yLines);
     	
 	// X-axis grid lines
 	float xPos = chartFrame.origin.x;
@@ -257,15 +258,21 @@
     float labelXPos = 0 + yLabelOffset;
 	for (int y = 0; y <= yLines; y++)
 	{
-		CGContextMoveToPoint(cgContext, xPos, yPos);
+        float yValue = _chartRange.min + ((float)y / (float)yLines) * (_chartRange.max - _chartRange.min);
+        yPos = [self axisYForValue:yValue];
+        
+        CGContextMoveToPoint(cgContext, xPos, yPos);
 		CGContextAddLineToPoint(cgContext, xPos + chartFrame.size.width, yPos);
 		CGContextSetStrokeColorWithColor(cgContext, gridColor.CGColor);
+        
 		if (drawYLabels)
 		{
-            float yValue = _chartRange.min + ((float)y / (float)yLines) * (_chartRange.max - _chartRange.min);
-			
 			if (y == 0)
 				yValue = _chartRange.min;
+
+            if (y == yLines)
+                yValue = _chartRange.max;
+            //NSLog(@"%@ yValue: %f _chartRange.max: %f", self, yValue, _chartRange.max);
 			
 			NSString *labelString;
 			if (yFormatter != nil)
@@ -280,15 +287,13 @@
 			CGSize labelSize = [labelString sizeWithFont:labelFont];
 			[gridColor set];
 			
-            float labelY = yPos - (labelSize.height * 0.5f);
+            float labelY = [self axisYForValue:yValue] - (labelSize.height * 0.5f);
             
             float labelX = (labelXPos + (chartFrame.origin.x * 0.5f)) - (labelSize.width * 0.5f);
 			
 			[labelString drawInRect:CGRectMake(labelX, labelY, labelSize.width, labelSize.height)
 						   withFont:labelFont];
 		}
-		
-		yPos -= gridSpaceY;
 		
 		if (y == (yLines - 1))
 		{
@@ -302,18 +307,20 @@
 	UIGraphicsEndImageContext();
 }
 
+
+// Returns the corresponding point on the appropriate axis for the supplied value
 - (float) axisXForValue:(float)value
 {
     return chartFrame.origin.x + (xPad * value);
 }
-
-
 - (float) axisYForValue:(float)value
 {
     float baseline = chartFrame.origin.y + chartFrame.size.height;
     return baseline - (value - _chartRange.min) * yPad;
 }
 
+
+#pragma mark - Rendering
 - (void) renderData
 {	
 	// baseline is the bottom line of the chart
