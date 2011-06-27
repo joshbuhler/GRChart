@@ -217,7 +217,10 @@
 	// X-axis grid lines
 	float xPos = chartFrame.origin.x;
 	float yPos = chartFrame.origin.y + chartFrame.size.height;
-	CGRect lastLabelRect = CGRectZero;	
+	CGRect lastLabelRect = CGRectZero;
+	
+    // use the first series for the label info
+    GRLineSeries *firstSeries = (GRLineSeries *)[_dataProvider objectAtIndex:0];    
 	for (int x = 0; x < xLines; x++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);
@@ -227,7 +230,36 @@
 		// draw the label - if it will overlap, then don't draw it
         if (drawXLabels)
         {
-            NSString *xLabelTxt = @"xLabel";
+            int objIndex = (int)floorf(((float)x / (float)xLines) * [firstSeries.data count]);
+            NSObject *cObj = [firstSeries.data objectAtIndex:objIndex];
+            NSString *xValue = nil;
+            if (firstSeries.xField != nil && [cObj isKindOfClass:[NSDictionary class]])
+            {
+                NSObject *xData = [(NSMutableDictionary *)cObj objectForKey:firstSeries.xField];
+                
+                if ([xData isKindOfClass:[NSNumber class]])
+                {
+                    if (xFormatter != nil)
+                    {
+                        xValue = [xFormatter stringForObjectValue:(NSNumber *)xData];
+                    }
+                    else
+                    {
+                        xValue = [NSString stringWithFormat:@"%f", [(NSNumber *)xData floatValue]];
+                    }
+                }
+                
+                if ([xData isKindOfClass:[NSString class]])
+                {
+                    xValue = (NSString *)xData;
+                }                
+            }
+            else
+            {
+                xValue = @"*NIL*";
+            }
+            
+            NSString *xLabelTxt = xValue;
             CGSize labelSize = [xLabelTxt sizeWithFont:labelFont];
             [gridColor set];
             

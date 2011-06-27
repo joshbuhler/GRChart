@@ -342,6 +342,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = GRCharts_Prefix.pch;
 				INFOPLIST_FILE = "GRCharts-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = GRCharts;
 			};
 			name = Debug;
@@ -354,6 +355,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = GRCharts_Prefix.pch;
 				INFOPLIST_FILE = "GRCharts-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = GRCharts;
 			};
 			name = Release;

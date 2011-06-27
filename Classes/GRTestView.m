@@ -44,7 +44,7 @@
 //		[test1 addObject:[NSNumber numberWithFloat:(float)(arc4random() % 15) / (float)((arc4random() % 15) + 1)]];
         [test1 addObject:[NSNumber numberWithInt:cPoint]];
         cPoint++;
-		NSLog(@"test1 num: %f", [[test1 objectAtIndex:i] floatValue]);
+		//NSLog(@"test1 num: %f", [[test1 objectAtIndex:i] floatValue]);
 	}
     
     // insert a missing value or two, just for testing that
@@ -64,6 +64,8 @@
 				   forKey:@"price"];
 		[newObj setObject:[NSNumber numberWithInt:i]
 										   forKey:@"day"];
+        [newObj setObject:[NSString stringWithFormat:@"Item %d", i]
+                   forKey:@"stringX"];
 		[test2 addObject:newObj];
 		//NSLog(@"test2 num: %f", rndValue);
 		[newObj release];
@@ -71,7 +73,7 @@
     [test2 replaceObjectAtIndex:9 withObject:[NSNull null]];
 	
 	GRLineSeries *series2 = [[GRLineSeries alloc] initWithData:test2 andColor:[UIColor cyanColor]];
-	series2.xField = @"day";
+	series2.xField = @"stringX";
 	series2.yField = @"price";
 	series2.xLabel = @"Date";
 	series2.yLabel = @"Price";
@@ -79,16 +81,17 @@
     series2.fillColor = [UIColor lightGrayColor];
     
 	//lineChart.chartTitle = @"Item Price / Time";
-    lineChart.drawXLabels = NO;
+    lineChart.drawXLabels = YES;
     lineChart.drawYLabels = YES;
 	
 	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
 	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
 	[numberFormatter setMinimumFractionDigits:0];
 	[numberFormatter setMaximumFractionDigits:2];
+    lineChart.xFormatter = numberFormatter;
 	lineChart.yFormatter = numberFormatter;
 	
-	lineChart.dataProvider = [NSArray arrayWithObjects:series1, nil];
+	lineChart.dataProvider = [NSArray arrayWithObjects:series2, series1, nil];
 	
 	[test1 release];
 	[test2 release];
