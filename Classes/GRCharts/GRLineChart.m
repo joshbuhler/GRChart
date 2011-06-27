@@ -182,7 +182,7 @@
     CGContextSetLineDash(cgContext, 0, nil, 0);
     UIColor *frameColor = [UIColor colorWithRed:.61f green:.61f blue:.61f alpha:1.0f];
     CGContextSetStrokeColorWithColor(cgContext, frameColor.CGColor);
-    CGContextSetLineWidth(cgContext, 3.0f);
+    CGContextSetLineWidth(cgContext, 1.5f);
     
     CGContextStrokeRect(cgContext, chartFrame);
 }
