@@ -49,7 +49,7 @@
 @synthesize guideLines;
 @synthesize overrideRange;
 @synthesize xGridColor, yGridColor;
-@synthesize drawXLabels, drawYLabels;
+@synthesize drawXLabels, drawYLabels, xLabelPos;
 @synthesize yLabelOffset;
 @synthesize dashedGridLines;
 @synthesize labelFont;
@@ -264,8 +264,9 @@
             [gridColor set];
             
             float labelX = xPos - (labelSize.width / 2);
+            float labelY = (xLabelPos == x_LABEL_POS_BOTTOM) ? (yPos + labelYPad) : 0;                
             
-            CGRect cLabelRect = CGRectMake(labelX, (yPos + labelYPad), labelSize.width, labelSize.height);
+            CGRect cLabelRect = CGRectMake(labelX, labelY, labelSize.width, labelSize.height);
             
             if (!CGRectIntersectsRect(lastLabelRect, cLabelRect))
             {
@@ -548,7 +549,12 @@
     }
     
     if (drawXLabels)
+    {
         chartFrame.size.height -= (labelSize.height + labelYPad);
+        
+        if (xLabelPos == x_LABEL_POS_TOP)
+            chartFrame.origin.y += (labelSize.height);
+    }
     
 	
 	// if there's a title, adjust the grid for that

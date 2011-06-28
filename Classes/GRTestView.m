@@ -83,6 +83,8 @@
 	//lineChart.chartTitle = @"Item Price / Time";
     lineChart.drawXLabels = YES;
     lineChart.drawYLabels = YES;
+    
+    lineChart.xLabelPos = x_LABEL_POS_TOP;
 	
 	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
 	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];

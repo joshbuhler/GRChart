@@ -84,7 +84,12 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
     
     NSArray	*_dataProvider;
 	BOOL	_dataProviderDirty;
+    
+    int     _xLabelPos;
 }
+
+#define x_LABEL_POS_BOTTOM  0
+#define x_LABEL_POS_TOP     1
 
 @property (nonatomic, retain) NSArray *dataProvider;
 
@@ -93,6 +98,7 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 
 @property (nonatomic) BOOL drawXLabels;
 @property (nonatomic) BOOL drawYLabels;
+@property (nonatomic) int xLabelPos;
 
 @property (nonatomic, retain) UIFont *labelFont;
 
