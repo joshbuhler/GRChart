@@ -48,7 +48,7 @@
 @synthesize chartTitle;
 @synthesize guideLines;
 @synthesize overrideRange;
-@synthesize xGridColor, yGridColor;
+@synthesize bgColor, xGridColor, yGridColor;
 @synthesize drawXLabels, drawYLabels, xLabelPos;
 @synthesize yLabelOffset;
 @synthesize dashedGridLines;
@@ -92,6 +92,7 @@
 	labelXPad = 5;
 	labelYPad = 5;
     
+    self.bgColor = [UIColor colorWithRed:0.15f green:0.15f blue:0.15f alpha:1.0f];
     self.xGridColor = [UIColor whiteColor];
     self.yGridColor = [UIColor whiteColor];
 }
@@ -159,8 +160,8 @@
     [self getChartRange];
     [self calcChartArea];
 
-    // draw in the background
-    CGContextSetFillColorWithColor(cgContext, [UIColor colorWithRed:0.15f green:0.15f blue:0.15f alpha:1.0f].CGColor);
+    // draw in the background    
+    CGContextSetFillColorWithColor(cgContext, bgColor.CGColor);
     CGContextFillRect(cgContext, chartFrame);
     
 //	if (redrawChart)

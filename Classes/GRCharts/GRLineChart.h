@@ -66,8 +66,9 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
     
     GRRange     overrideRange;
     
-    UIColor    *xGridColor;
-    UIColor    *yGridColor;
+    UIColor     *bgColor;
+    UIColor     *xGridColor;
+    UIColor     *yGridColor;
     
     BOOL        dashedGridLines;
     
@@ -106,6 +107,7 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 
 @property (nonatomic) BOOL dashedGridLines;
 
+@property (nonatomic, retain) UIColor *bgColor;
 @property (nonatomic, retain) UIColor *xGridColor;
 @property (nonatomic, retain) UIColor *yGridColor;
 
