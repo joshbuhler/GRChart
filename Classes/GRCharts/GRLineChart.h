@@ -54,6 +54,7 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 	float		labelXPad;
 	float		labelYPad;
     
+    BOOL        drawChartFrame;
     BOOL        drawXLabels;
     BOOL        drawYLabels;
 	
@@ -97,6 +98,7 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 @property (nonatomic) float minGridX;
 @property (nonatomic) float minGridY;
 
+@property (nonatomic) BOOL drawChartFrame;
 @property (nonatomic) BOOL drawXLabels;
 @property (nonatomic) BOOL drawYLabels;
 @property (nonatomic) int xLabelPos;

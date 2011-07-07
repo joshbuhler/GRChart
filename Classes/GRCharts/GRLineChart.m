@@ -49,7 +49,7 @@
 @synthesize guideLines;
 @synthesize overrideRange;
 @synthesize bgColor, xGridColor, yGridColor;
-@synthesize drawXLabels, drawYLabels, xLabelPos;
+@synthesize drawChartFrame, drawXLabels, drawYLabels, xLabelPos;
 @synthesize yLabelOffset;
 @synthesize dashedGridLines;
 @synthesize labelFont;
@@ -86,6 +86,8 @@
 	
 	chartFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
 	
+    self.drawChartFrame = YES;
+    
 	minGridX = 20;
 	minGridY = 30;
 	
@@ -178,14 +180,17 @@
 //    }
     
     // draw the frame around the chart
-    CGContextSetShadowWithColor(cgContext, CGSizeMake(3, 3), 4.0f, [UIColor blackColor].CGColor); // using this version to better control the alpha of the shadow
-    CGContextBeginPath(cgContext);
-    CGContextSetLineDash(cgContext, 0, nil, 0);
-    UIColor *frameColor = [UIColor colorWithRed:.61f green:.61f blue:.61f alpha:1.0f];
-    CGContextSetStrokeColorWithColor(cgContext, frameColor.CGColor);
-    CGContextSetLineWidth(cgContext, 1.5f);
-    
-    CGContextStrokeRect(cgContext, chartFrame);
+    if (drawChartFrame)
+    {
+        CGContextSetShadowWithColor(cgContext, CGSizeMake(3, 3), 4.0f, [UIColor blackColor].CGColor); // using this version to better control the alpha of the shadow
+        CGContextBeginPath(cgContext);
+        CGContextSetLineDash(cgContext, 0, nil, 0);
+        UIColor *frameColor = [UIColor colorWithRed:.61f green:.61f blue:.61f alpha:1.0f];
+        CGContextSetStrokeColorWithColor(cgContext, frameColor.CGColor);
+        CGContextSetLineWidth(cgContext, 1.5f);
+        
+        CGContextStrokeRect(cgContext, chartFrame);
+    }
 }
 
 - (void) renderGrid
