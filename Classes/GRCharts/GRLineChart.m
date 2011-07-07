@@ -48,7 +48,7 @@
 @synthesize chartTitle;
 @synthesize guideLines;
 @synthesize overrideRange;
-@synthesize bgColor, xGridColor, yGridColor;
+@synthesize bgColor, xGridColor, yGridColor, xLabelSeriesIndex;
 @synthesize drawChartFrame, drawXLabels, drawYLabels, xLabelPos;
 @synthesize yLabelOffset;
 @synthesize dashedGridLines;
@@ -168,8 +168,9 @@
     
 //	if (redrawChart)
 //    {
-        [self renderData];
-        [self renderGrid];
+    [self renderGrid];    
+    [self renderData];
+        
         redrawChart = NO;
 //    }
 //    
@@ -226,7 +227,7 @@
 	CGRect lastLabelRect = CGRectZero;
 	
     // use the first series for the label info
-    GRLineSeries *firstSeries = (GRLineSeries *)[_dataProvider objectAtIndex:0];    
+    GRLineSeries *firstSeries = (GRLineSeries *)[_dataProvider objectAtIndex:xLabelSeriesIndex];    
 	for (int x = 0; x < xLines; x++)
 	{
 		CGContextMoveToPoint(cgContext, xPos, yPos);

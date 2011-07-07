@@ -57,6 +57,7 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
     BOOL        drawChartFrame;
     BOOL        drawXLabels;
     BOOL        drawYLabels;
+    int         xLabelSeriesIndex;
 	
 	NSFormatter	*yFormatter;
 	NSFormatter *xFormatter;
@@ -102,6 +103,7 @@ static inline GRRange GRRangeMake(CGFloat min, CGFloat max)
 @property (nonatomic) BOOL drawXLabels;
 @property (nonatomic) BOOL drawYLabels;
 @property (nonatomic) int xLabelPos;
+@property (nonatomic) int xLabelSeriesIndex;
 
 @property (nonatomic, retain) UIFont *labelFont;
 
